@@ -5,6 +5,7 @@ export default function Home() {
       <p className="mt-4 text-lg text-gray-600">
         Modern shop powered by Next.js, Tailwind, and Firebase
       </p>
+      
     </section>
   );
 }
