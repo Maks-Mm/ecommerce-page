@@ -2,7 +2,7 @@
 
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import { FooterR254 } from "./components/Footer";
 //import Hero from "./components/Hero";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         {/* <Hero /> */}
         <main className="flex-grow">{children}</main>
-        <Footer />
+        <FooterR254 />
       </body>
     </html>
   );
