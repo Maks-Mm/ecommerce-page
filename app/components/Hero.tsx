@@ -1,12 +1,9 @@
 // app/components/Hero.tsx
 import React from 'react';
 import DynamicAd from './DynamicAd';
-import type { AdSection, AdSize } from './DynamicAd';
 import { GiConfirmed } from 'react-icons/gi';
 
-
-// Hero does not need DynamicAdProps
-interface HeroProps {} // empty for now, can add future props
+interface HeroProps { }
 
 const Hero: React.FC<HeroProps> = () => {
   return (
@@ -16,20 +13,20 @@ const Hero: React.FC<HeroProps> = () => {
       <div className="bg-white shadow-xl rounded-2xl p-6 md:p-10 overflow-hidden mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
 
-          {/* LEFT: Hero text, bullets, CTA */}
+          {/* LEFT: Hero text */}
           <div className="text-left order-2 md:order-1">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-              <span className="block bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+              <span className="block text-[#51a2ff]">
                 Perfektionieren
               </span>
               <span className="block text-gray-800 mt-2">Sie den Online-Auftritt</span>
               <span className="block text-gray-800">Ihres Unternehmens</span>
             </h1>
 
+
             <div className="mt-6 md:mt-8 space-y-3 text-gray-700 text-base md:text-lg">
               {['Bewertungen löschen', 'Bewertungen effizient verwalten', 'Positive Bewertungen aufbauen'].map((text, idx) => (
                 <div key={idx} className="flex items-start p-3 rounded-lg hover:bg-blue-50 transition-colors">
-                  <GiConfirmed className="mt-1 mr-3 text-blue-500 flex-shrink-0 text-xl" />
                   <span className="font-medium">{text}</span>
                 </div>
               ))}
@@ -58,29 +55,81 @@ const Hero: React.FC<HeroProps> = () => {
         </div>
       </div>
 
+      {/* SOLUTIONS SECTION */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-12">
+
+        {/* LEFT SIDE */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Unsere Lösungen für Ihr Unternehmen:</h1>
+          <p className="text-gray-600 mb-4">
+            Gute Bewertungen, ein positiver Markenauftritt und eine tadellose Reputation sind heute die Basis und ein
+            unabdingbarer Baustein Ihres Erfolges. Onno Plus unterstützt Sie dabei.
+          </p>
+          <h3 className="text-xl font-semibold text-gray-700 mb-3">Unser Angebot ist ideal für Sie, wenn...</h3>
+          <ul className="space-y-3 text-gray-700">
+            <li className="flex items-center">
+              <GiConfirmed className="mr-2 text-blue-500 text-xl" /> Sie ein Ladengeschäft oder mehrere Filialen besitzen
+            </li>
+            <li className="flex items-center">
+              <GiConfirmed className="mr-2 text-blue-500 text-xl" /> Sie sich von Ihrer Konkurrenz abheben möchten
+            </li>
+            <li className="flex items-center">
+              <GiConfirmed className="mr-2 text-blue-500 text-xl" /> Sie durch Bewertungen benachteiligt wurden
+            </li>
+            <li className="flex items-center">
+              <GiConfirmed className="mr-2 text-blue-500 text-xl" /> Sich echte Profis um Ihre Online-Bewertungen kümmern sollen
+            </li>
+          </ul>
+          <button className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition">
+            Kontakt aufnehmen
+          </button>
+        </div>
+
+        {/* RIGHT SIDE (4 CARDS with icons) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {[1, 2, 3, 4].map((_, idx) => (
+            <div
+              key={idx}
+              className="bg-white shadow rounded-xl p-6 flex flex-col items-start hover:shadow-lg transition"
+            >
+              <div className="flex items-center mb-3">
+                <GiConfirmed className="mr-2 text-blue-500 text-xl" />
+                <h2 className="text-lg font-semibold text-gray-800">Bewertungen löschen</h2>
+              </div>
+              <p className="text-gray-600 mb-4">
+                auf allen gängigen Portalen wie Google, Kununu und Co.
+              </p>
+              <button className="mt-auto text-blue-600 font-medium hover:underline">
+                Mehr erfahren
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+
       {/* ADS SECTION */}
       <div className="text-center mb-6">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Angebote unserer Partner</h2>
         <p className="mt-2 text-gray-600 max-w-2xl mx-auto">Exklusive Angebote, die speziell für unsere Kunden ausgewählt wurden</p>
       </div>
 
+      {/* TOP ADS */}
       <div className="flex flex-col md:flex-row items-stretch gap-6 mb-8">
-        {/* Main top banner */}
         <div className="w-full md:w-2/3">
           <div className="bg-white rounded-2xl shadow-lg p-5 border border-gray-100">
             <h3 className="text-lg font-semibold text-gray-700 mb-3">Empfohlene Angebote</h3>
-            <div className="w-full h-24 md:h-40 rounded-xl bg-gradient-to-br from-blue-50 to-gray-50 flex items-center justify-center overflow-hidden border border-gray-200">
-              <DynamicAd section="top" theme="cars" size="large" />
+            <div className="w-full">
+              <DynamicAd section="top" size="large" />
             </div>
           </div>
         </div>
 
-        {/* Secondary ad */}
         <div className="w-full md:w-1/3">
-          <div className="bg-white rounded-2xl shadow-lg p-5 border border-gray-100 h-full">
+          <div className="bg-white rounded-2xl shadow-lg p-5 border border-gray-100 h-full flex flex-col">
             <h3 className="text-lg font-semibold text-gray-700 mb-3">Spezial-Angebot</h3>
-            <div className="w-full h-20 md:h-36 rounded-xl bg-gradient-to-br from-blue-50 to-gray-50 flex items-center justify-center overflow-hidden border border-gray-200">
-              <DynamicAd section="top-secondary" theme="education" size="medium" />
+            <div className="w-full flex-grow">
+              <DynamicAd section="top-secondary" size="medium" />
             </div>
           </div>
         </div>
@@ -97,8 +146,8 @@ const Hero: React.FC<HeroProps> = () => {
           <div className="my-6">
             <div className="bg-gradient-to-br from-blue-50 to-gray-50 rounded-2xl p-4 border border-gray-200">
               <h3 className="text-lg font-semibold text-gray-700 mb-3">Aktuelle Angebote</h3>
-              <div className="w-full h-28 md:h-40 rounded-xl flex items-center justify-center overflow-hidden">
-                <DynamicAd section="middle" theme="coaching" size="medium" />
+              <div className="w-full">
+                <DynamicAd section="middle" size="medium" />
               </div>
             </div>
           </div>
@@ -116,8 +165,8 @@ const Hero: React.FC<HeroProps> = () => {
           <div className="mt-6">
             <div className="bg-gradient-to-br from-blue-50 to-gray-50 rounded-2xl p-4 border border-gray-200">
               <h3 className="text-lg font-semibold text-gray-700 mb-3">Exklusiv für Sie</h3>
-              <div className="w-full h-28 md:h-40 rounded-xl flex items-center justify-center overflow-hidden">
-                <DynamicAd section="footer" theme="education" size="large" />
+              <div className="w-full">
+                <DynamicAd section="footer" size="large" />
               </div>
             </div>
           </div>
