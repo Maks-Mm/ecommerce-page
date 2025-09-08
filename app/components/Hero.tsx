@@ -55,6 +55,8 @@ const Hero: React.FC<HeroProps> = () => {
         </div>
       </div>
 
+
+
       {/* SOLUTIONS SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-12">
 
@@ -106,6 +108,88 @@ const Hero: React.FC<HeroProps> = () => {
           ))}
         </div>
       </div>
+
+
+     {/* ONLINE-REPUTATION SECTION */}
+<section className="relative text-gray-900 bg-white w-screen max-w-screen-xl mx-auto px-4 flex flex-col items-center justify-center py-16 md:py-24">
+  <div className="text-center max-w-3xl mb-12">
+    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+      Ihre Online-Reputation ist heutzutage so wichtig wie nie zuvor
+    </h1>
+    <p className="mt-4 text-lg md:text-xl text-gray-600">
+      Vertrauen ist die Währung im digitalen Zeitalter. Sorgen Sie dafür, dass Ihr Unternehmen überall positiv wahrgenommen wird.
+    </p>
+  </div>
+
+ {/* 3 COLUMNS STATS with circular percent bars */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full">
+  {/* 79% */}
+  <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-xl shadow-sm">
+    <div className="relative w-28 h-28 mb-4">
+      <div
+        className="w-28 h-28 rounded-full"
+        style={{
+          background: `conic-gradient(#51a2ff 0% 79%, #e5e7eb 79% 100%)`,
+        }}
+      ></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-2xl font-bold text-gray-900">79%</span>
+      </div>
+    </div>
+    <p className="mt-2 text-gray-700">
+      Vertrauen Bewertungen genauso wie persönlichen Empfehlungen
+    </p>
+    <p className="mt-2 text-sm text-gray-500">
+      Quelle: BrightLocal Studie, 2020
+    </p>
+  </div>
+
+  {/* 74% */}
+  <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-xl shadow-sm">
+    <div className="relative w-28 h-28 mb-4">
+      <div
+        className="w-28 h-28 rounded-full"
+        style={{
+          background: `conic-gradient(#51a2ff 0% 74%, #e5e7eb 74% 100%)`,
+        }}
+      ></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-2xl font-bold text-gray-900">74%</span>
+      </div>
+    </div>
+    <p className="mt-2 text-gray-700">
+      Lesen oft oder vor jedem Kauf Online-Bewertungen und Meinungen
+    </p>
+    <p className="mt-2 text-sm text-gray-500">
+      Quelle: Capterra Nutzerstudie, 2019
+    </p>
+  </div>
+
+  {/* 92% */}
+  <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-xl shadow-sm">
+    <div className="relative w-28 h-28 mb-4">
+      <div
+        className="w-28 h-28 rounded-full"
+        style={{
+          background: `conic-gradient(#51a2ff 0% 92%, #e5e7eb 92% 100%)`,
+        }}
+      ></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-2xl font-bold text-gray-900">92%</span>
+      </div>
+    </div>
+    <p className="mt-2 text-gray-700">
+      Entscheiden sich nach dem Lesen einer negativen Bewertung eher für ein anderes Unternehmen
+    </p>
+    <p className="mt-2 text-sm text-gray-500">
+      Quelle: BrightLocal Studie, 2020
+    </p>
+  </div>
+</div>
+
+</section>
+
+
 
 
       {/* ADS SECTION */}
