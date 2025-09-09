@@ -1,11 +1,42 @@
 // app/components/Hero.tsx
+"use client";
+
 import React from 'react';
 import DynamicAd from './DynamicAd';
 import { GiConfirmed } from 'react-icons/gi';
+import { useState } from 'react';
+import TimeLabelButtons from './TimeLabelButtons';
 
 interface HeroProps { }
 
 const Hero: React.FC<HeroProps> = () => {
+
+  const [activeStep, setActiveStep] = useState(0);
+
+  const steps = [
+    {
+      title: 'Entfernung von unerwünschten Bewertungen',
+      description:
+        '100% Sicherheit für Sie! Wir sind spezialisiert darauf, unerwünschte Google Bewertungen zu löschen, und Sie zahlen erst nach erfolgreicher Durchführung. Mit unseren führenden Bearbeitungszeiten von durchschnittlich nur 2 Wochen setzen wir Maßstäbe in Sachen Geschwindigkeit.',
+    },
+    {
+      title: 'Überwachung Ihrer Online-Reputation',
+      description:
+        'Wir behalten kontinuierlich Ihre Bewertungen im Blick und informieren Sie über alle wichtigen Änderungen, damit Sie stets die Kontrolle behalten.',
+    },
+    {
+      title: 'Aufbau positiver Bewertungen',
+      description:
+        'Durch gezielte Maßnahmen helfen wir Ihnen, authentische positive Bewertungen zu generieren und das Vertrauen Ihrer Kunden nachhaltig zu stärken.',
+    },
+    {
+      title: 'Skalierung Ihres Online-Rufs',
+      description:
+        'Wir optimieren Ihre Online-Präsenz langfristig und helfen Ihnen, Ihren Ruf strategisch auszubauen, um mehr Kunden zu gewinnen und Umsatz zu steigern.',
+    },
+  ];
+
+
   return (
     <div className="p-4 md:p-8 bg-gradient-to-br from-blue-50 to-white min-h-screen">
 
@@ -191,55 +222,74 @@ const Hero: React.FC<HeroProps> = () => {
 
 
       {/* PROBLEMS SECTION */}
-<section className="relative py-12">
-  <div className="text-center max-w-3xl mx-auto mb-10">
-    <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-      Welche Probleme entstehen durch Bewertungen?
-    </h2>
-    <p className="mt-3 text-gray-600 text-base md:text-lg">
-      Negative Bewertungen können das Vertrauen Ihrer Kunden schwächen
-      und langfristig Ihren Unternehmenserfolg gefährden.
-    </p>
-  </div>
+      <section className="relative py-12">
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+            Welche Probleme entstehen durch Bewertungen?
+          </h2>
+          <p className="mt-3 text-gray-600 text-base md:text-lg">
+            Negative Bewertungen können das Vertrauen Ihrer Kunden schwächen
+            und langfristig Ihren Unternehmenserfolg gefährden.
+          </p>
+        </div>
 
-  {/* Cards grid */}
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    {[
-      {
-        id: 1,
-        text: "Es stehen nachteilige Bewertungen über Sie oder Ihr Unternehmen im Internet.",
-        img: "https://as2.ftcdn.net/v2/jpg/05/59/64/33/1000_F_559643360_oqEqtrmAv2bycK4byljdViiy6WGUZ7hN.jpg",
-      },
-      {
-        id: 2,
-        text: "Ihr Ranking und die Auffindbarkeit auf Bewertungsplattformen verschlechtert sich.",
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg6IxGB7UhFe9d0sHtNLLFZBxV575Mn36QRg&s",
-      },
-      {
-        id: 3,
-        text: "Ihre Kunden gehen zur Konkurrenz und wahrscheinlich müssen Sie Umsatzeinbußen akzeptieren.",
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQghy77IlblGqNJD2YGYyss4-4Nfr3S3vKzJmIXATgPoWlslB16J9rE3FfRpzdMmUr3mY4&usqp=CAU",
-      },
-      {
-        id: 4,
-        text: "Ihnen fehlt die Zeit und die Ressourcen, um Ihre Online-Reputation aktiv zu verwalten.",
-        img: "https://www.shutterstock.com/image-vector/closed-stamp-text-letters-concept-260nw-2110895720.jpg",
-      },
-    ].map((card) => (
-      <div
-        key={card.id}
-        className="bg-white shadow p-6 rounded-xl flex flex-col items-center text-center hover:shadow-lg transition"
-      >
-        <div className="text-3xl font-bold text-blue-500 mb-3">{card.id}</div>
-        <img
-          src={card.img}
-          alt={`Problem ${card.id}`}
-          className="w-20 h-20 object-cover rounded-md mb-4"
-          loading="lazy"
-        />
-        <p className="text-gray-700 text-sm md:text-base">{card.text}</p>
-      </div>
-    ))}
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              id: 1,
+              text: "Es stehen nachteilige Bewertungen über Sie oder Ihr Unternehmen im Internet.",
+              img: "https://as2.ftcdn.net/v2/jpg/05/59/64/33/1000_F_559643360_oqEqtrmAv2bycK4byljdViiy6WGUZ7hN.jpg",
+            },
+            {
+              id: 2,
+              text: "Ihr Ranking und die Auffindbarkeit auf Bewertungsplattformen verschlechtert sich.",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg6IxGB7UhFe9d0sHtNLLFZBxV575Mn36QRg&s",
+            },
+            {
+              id: 3,
+              text: "Ihre Kunden gehen zur Konkurrenz und wahrscheinlich müssen Sie Umsatzeinbußen akzeptieren.",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQghy77IlblGqNJD2YGYyss4-4Nfr3S3vKzJmIXATgPoWlslB16J9rE3FfRpzdMmUr3mY4&usqp=CAU",
+            },
+            {
+              id: 4,
+              text: "Ihnen fehlt die Zeit und die Ressourcen, um Ihre Online-Reputation aktiv zu verwalten.",
+              img: "https://www.shutterstock.com/image-vector/closed-stamp-text-letters-concept-260nw-2110895720.jpg",
+            },
+          ].map((card) => (
+            <div
+              key={card.id}
+              className="bg-white shadow p-6 rounded-xl flex flex-col items-center text-center hover:shadow-lg transition"
+            >
+              <div className="text-3xl font-bold text-blue-500 mb-3">{card.id}</div>
+              <img
+                src={card.img}
+                alt={`Problem ${card.id}`}
+                className="w-20 h-20 object-cover rounded-md mb-4"
+                loading="lazy"
+              />
+              <p className="text-gray-700 text-sm md:text-base">{card.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+
+
+
+     {/* STEP-BY-STEP REPUTATION SECTION */}
+{/* STEP-BY-STEP REPUTATION SECTION (Clean, full-width) */}
+<section className="py-16 bg-blue-50">
+  <div className="max-w-4xl mx-auto text-center px-4">
+    <h2 className="text-3xl md:text-4xl font-bold text-blue-700 mb-6">
+      Wir setzen am Kern des Problems an
+    </h2>
+    <p className="text-gray-800 text-lg md:text-xl mb-6">
+      Wir begleiten Sie Schritt für Schritt beim Aufbau Ihrer Online-Reputation.
+    </p>
+    {/* Optional: Step navigation buttons */}
+    <TimeLabelButtons />
   </div>
 </section>
 
