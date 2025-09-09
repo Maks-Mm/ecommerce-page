@@ -278,7 +278,6 @@ const Hero: React.FC<HeroProps> = () => {
 
 
 
-     {/* STEP-BY-STEP REPUTATION SECTION */}
 {/* STEP-BY-STEP REPUTATION SECTION (Clean, full-width) */}
 <section className="py-16 bg-blue-50">
   <div className="max-w-4xl mx-auto text-center px-4">
@@ -292,6 +291,68 @@ const Hero: React.FC<HeroProps> = () => {
     <TimeLabelButtons />
   </div>
 </section>
+
+<section className="bg-gray-50">
+  <div className="max-w-6xl mx-auto px-4 py-16 flex flex-col lg:flex-row gap-12">
+    
+    {/* Left Side - About / Innovative Section */}
+    <div className="lg:w-1/2 flex flex-col justify-start space-y-6">
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Onno Plus: innovativ & persönlich</h1>
+      <p className="text-gray-700 text-lg md:text-xl">
+        Wir helfen dem Mittelstand mit einem professionellen Online-Auftritt zu mehr Reichweite und einer positiven Außendarstellung. Lernen Sie uns kennen!
+      </p>
+      <button className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition">
+        Über uns
+      </button>
+      
+      {/* Optional left side boxes or extra info */}
+      <div className="mt-8 grid grid-cols-1 gap-4">
+        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+          <span className="text-blue-600 font-bold">Innovativ</span>
+          <p className="text-gray-700">Neue Ansätze für Ihre Online-Reputation.</p>
+        </div>
+        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+          <span className="text-blue-600 font-bold">Präsentation</span>
+          <p className="text-gray-700">Professionell und ansprechend für Ihre Kunden.</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Right Side - Team / Stats Section */}
+    <div className="lg:w-1/2 flex flex-col justify-start space-y-6 text-left">
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Werde Teil unseres aufstrebenden Teams</h1>
+      <p className="text-gray-700 text-lg md:text-xl">
+        Onno Plus ist stets auf der Suche nach Talenten, die uns auf unserem Weg unterstützen wollen, die führende Online-Reputations-Plattform Europas zu werden.
+      </p>
+
+      {/* Stats Boxes */}
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+          <span className="text-blue-600 font-bold">50+</span>
+          <p className="text-gray-700">zufriedene Mitarbeiter</p>
+        </div>
+        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+          <span className="text-blue-600 font-bold">10+</span>
+          <p className="text-gray-700">verschiedene Nationalitäten</p>
+        </div>
+        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+          <span className="text-blue-600 font-bold">12.000+</span>
+          <p className="text-gray-700">zufriedene Kunden</p>
+        </div>
+        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+          <span className="text-blue-600 font-bold">175.000+</span>
+          <p className="text-gray-700">gelöschte Bewertungen</p>
+        </div>
+      </div>
+
+      <button className="mt-6 px-6 py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition">
+        Bewirb dich jetzt
+      </button>
+    </div>
+
+  </div>
+</section>
+
 
 
 
