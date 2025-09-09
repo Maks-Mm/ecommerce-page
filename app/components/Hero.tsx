@@ -1,4 +1,6 @@
 // app/components/Hero.tsx
+
+
 "use client";
 
 import React from 'react';
@@ -13,28 +15,7 @@ const Hero: React.FC<HeroProps> = () => {
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const steps = [
-    {
-      title: 'Entfernung von unerwünschten Bewertungen',
-      description:
-        '100% Sicherheit für Sie! Wir sind spezialisiert darauf, unerwünschte Google Bewertungen zu löschen, und Sie zahlen erst nach erfolgreicher Durchführung. Mit unseren führenden Bearbeitungszeiten von durchschnittlich nur 2 Wochen setzen wir Maßstäbe in Sachen Geschwindigkeit.',
-    },
-    {
-      title: 'Überwachung Ihrer Online-Reputation',
-      description:
-        'Wir behalten kontinuierlich Ihre Bewertungen im Blick und informieren Sie über alle wichtigen Änderungen, damit Sie stets die Kontrolle behalten.',
-    },
-    {
-      title: 'Aufbau positiver Bewertungen',
-      description:
-        'Durch gezielte Maßnahmen helfen wir Ihnen, authentische positive Bewertungen zu generieren und das Vertrauen Ihrer Kunden nachhaltig zu stärken.',
-    },
-    {
-      title: 'Skalierung Ihres Online-Rufs',
-      description:
-        'Wir optimieren Ihre Online-Präsenz langfristig und helfen Ihnen, Ihren Ruf strategisch auszubauen, um mehr Kunden zu gewinnen und Umsatz zu steigern.',
-    },
-  ];
+  
 
 
   return (
@@ -278,151 +259,122 @@ const Hero: React.FC<HeroProps> = () => {
 
 
 
-{/* STEP-BY-STEP REPUTATION SECTION (Clean, full-width) */}
-<section className="py-16 bg-blue-50">
-  <div className="max-w-4xl mx-auto text-center px-4">
-    <h2 className="text-3xl md:text-4xl font-bold text-blue-700 mb-6">
-      Wir setzen am Kern des Problems an
-    </h2>
-    <p className="text-gray-800 text-lg md:text-xl mb-6">
-      Wir begleiten Sie Schritt für Schritt beim Aufbau Ihrer Online-Reputation.
-    </p>
-    {/* Optional: Step navigation buttons */}
-    <TimeLabelButtons />
-  </div>
-</section>
-
-<section className="bg-gray-50">
-  <div className="max-w-6xl mx-auto px-4 py-16 flex flex-col lg:flex-row gap-12">
-    
-    {/* Left Side - About / Innovative Section */}
-    <div className="lg:w-1/2 flex flex-col justify-start space-y-6">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Onno Plus: innovativ & persönlich</h1>
-      <p className="text-gray-700 text-lg md:text-xl">
-        Wir helfen dem Mittelstand mit einem professionellen Online-Auftritt zu mehr Reichweite und einer positiven Außendarstellung. Lernen Sie uns kennen!
-      </p>
-      <button className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition">
-        Über uns
-      </button>
-      
-      {/* Optional left side boxes or extra info */}
-      <div className="mt-8 grid grid-cols-1 gap-4">
-        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
-          <span className="text-blue-600 font-bold">Innovativ</span>
-          <p className="text-gray-700">Neue Ansätze für Ihre Online-Reputation.</p>
+      {/* STEP-BY-STEP REPUTATION SECTION (Clean, full-width) */}
+      <section className="py-16 bg-blue-50">
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-blue-700 mb-6">
+            Wir setzen am Kern des Problems an
+          </h2>
+          <p className="text-gray-800 text-lg md:text-xl mb-6">
+            Wir begleiten Sie Schritt für Schritt beim Aufbau Ihrer Online-Reputation.
+          </p>
+          {/* Optional: Step navigation buttons */}
+          <TimeLabelButtons />
         </div>
-        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
-          <span className="text-blue-600 font-bold">Präsentation</span>
-          <p className="text-gray-700">Professionell und ansprechend für Ihre Kunden.</p>
+      </section>
+
+      <section className="bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 py-16 flex flex-col lg:flex-row gap-12">
+
+          {/* Left Side - About / Innovative Section */}
+          <div className="lg:w-1/2 flex flex-col justify-start space-y-6">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Onno Plus: innovativ & persönlich</h1>
+            <p className="text-gray-700 text-lg md:text-xl">
+              Wir helfen dem Mittelstand mit einem professionellen Online-Auftritt zu mehr Reichweite und einer positiven Außendarstellung. Lernen Sie uns kennen!
+            </p>
+            <button className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition">
+              Über uns
+            </button>
+
+            {/* Optional left side boxes or extra info */}
+            <div className="mt-8 grid grid-cols-1 gap-4">
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <span className="text-blue-600 font-bold">Innovativ</span>
+                <p className="text-gray-700">Neue Ansätze für Ihre Online-Reputation.</p>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <span className="text-blue-600 font-bold">Präsentation</span>
+                <p className="text-gray-700">Professionell und ansprechend für Ihre Kunden.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Team / Stats Section */}
+          <div className="lg:w-1/2 flex flex-col justify-start space-y-6 text-left">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Werde Teil unseres aufstrebenden Teams</h1>
+            <p className="text-gray-700 text-lg md:text-xl">
+              Onno Plus ist stets auf der Suche nach Talenten, die uns auf unserem Weg unterstützen wollen, die führende Online-Reputations-Plattform Europas zu werden.
+            </p>
+
+            {/* Stats Boxes */}
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <span className="text-blue-600 font-bold">50+</span>
+                <p className="text-gray-700">zufriedene Mitarbeiter</p>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <span className="text-blue-600 font-bold">10+</span>
+                <p className="text-gray-700">verschiedene Nationalitäten</p>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <span className="text-blue-600 font-bold">12.000+</span>
+                <p className="text-gray-700">zufriedene Kunden</p>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <span className="text-blue-600 font-bold">175.000+</span>
+                <p className="text-gray-700">gelöschte Bewertungen</p>
+              </div>
+            </div>
+
+            <button className="mt-6 px-6 py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition">
+              Bewirb dich jetzt
+            </button>
+          </div>
+
         </div>
-      </div>
-    </div>
-
-    {/* Right Side - Team / Stats Section */}
-    <div className="lg:w-1/2 flex flex-col justify-start space-y-6 text-left">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Werde Teil unseres aufstrebenden Teams</h1>
-      <p className="text-gray-700 text-lg md:text-xl">
-        Onno Plus ist stets auf der Suche nach Talenten, die uns auf unserem Weg unterstützen wollen, die führende Online-Reputations-Plattform Europas zu werden.
-      </p>
-
-      {/* Stats Boxes */}
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
-          <span className="text-blue-600 font-bold">50+</span>
-          <p className="text-gray-700">zufriedene Mitarbeiter</p>
-        </div>
-        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
-          <span className="text-blue-600 font-bold">10+</span>
-          <p className="text-gray-700">verschiedene Nationalitäten</p>
-        </div>
-        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
-          <span className="text-blue-600 font-bold">12.000+</span>
-          <p className="text-gray-700">zufriedene Kunden</p>
-        </div>
-        <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
-          <span className="text-blue-600 font-bold">175.000+</span>
-          <p className="text-gray-700">gelöschte Bewertungen</p>
-        </div>
-      </div>
-
-      <button className="mt-6 px-6 py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition">
-        Bewirb dich jetzt
-      </button>
-    </div>
-
-  </div>
-</section>
-
-
-
-
-
-
+      </section>
 
       {/* ADS SECTION */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Angebote unserer Partner</h2>
-        <p className="mt-2 text-gray-600 max-w-2xl mx-auto">Exklusive Angebote, die speziell für unsere Kunden ausgewählt wurden</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Neues aus unserem Blog</h2>
+        <p className="mt-2 text-gray-600 max-w-2xl mx-auto">Hier finden Sie die neuesten Beiträge rund um das wichtige Thema Reputationsmanagement</p>
       </div>
 
-      {/* TOP ADS */}
-      <div className="flex flex-col md:flex-row items-stretch gap-6 mb-8">
-        <div className="w-full md:w-2/3">
-          <div className="bg-white rounded-2xl shadow-lg p-5 border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">Empfohlene Angebote</h3>
-            <div className="w-full">
-              <DynamicAd section="top" size="large" />
-            </div>
+      <section className="py-16 bg-gray-50">
+  <div className="max-w-6xl mx-auto px-4 text-center">
+
+    {/* Grid of 6 boxes */}
+
+    
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+      {[1, 2, 3, 4, 5, 6].map((item) => (
+        <div key={item} className="flex flex-col items-center">
+          {/* Image box */}
+          <div className="w-full bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+          {/*<DynamicAd/> : here were implemented the dynamic ads */}
+            <img
+              src={`https://picsum.photos/seed/demo-${item}/600/400`}
+              alt={`Beispiel ${item}`}
+              className="w-full h-48 object-cover"
+            />
           </div>
+
+          {/* Text UNDER the card */}
+          <h3 className="mt-4 text-2xl font-bold text-gray-800">
+            Beispiel {item}
+          </h3>
+          <p className="mt-2 text-gray-600 text-base max-w-md">
+            Kurzer Beschreibungstext für Box {item}. Dies ist ein Beispiel mit
+            Bild oben und Text darunter.
+          </p>
         </div>
+      ))}
+    </div>
+  </div>
+</section>
 
-        <div className="w-full md:w-1/3">
-          <div className="bg-white rounded-2xl shadow-lg p-5 border border-gray-100 h-full flex flex-col">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">Spezial-Angebot</h3>
-            <div className="w-full flex-grow">
-              <DynamicAd section="top-secondary" size="medium" />
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* MIDDLE CONTENT + AD */}
-      <section className="mt-8 md:mt-12">
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Featured Products</h2>
-            <p className="mt-2 text-gray-600 max-w-2xl mx-auto">Check out our latest offers and collections designed to help your business thrive online.</p>
-          </div>
 
-          <div className="my-6">
-            <div className="bg-gradient-to-br from-blue-50 to-gray-50 rounded-2xl p-4 border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">Aktuelle Angebote</h3>
-              <div className="w-full">
-                <DynamicAd section="middle" size="medium" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER AD */}
-      <section className="mt-8 md:mt-12 mb-10">
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">More Deals</h2>
-            <p className="mt-2 text-gray-600 max-w-2xl mx-auto">Don't miss our special discounts and limited-time offers.</p>
-          </div>
-
-          <div className="mt-6">
-            <div className="bg-gradient-to-br from-blue-50 to-gray-50 rounded-2xl p-4 border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">Exklusiv für Sie</h3>
-              <div className="w-full">
-                <DynamicAd section="footer" size="large" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
