@@ -22,6 +22,7 @@ export default function LoginPage() {
       alert(error.message);
     }
   };
+  {/*the alerts are to change to toast notifications */}
 
   const handleGoogleLogin = async () => {
     try {
@@ -29,7 +30,7 @@ export default function LoginPage() {
       await signInWithPopup(auth, provider);
       localStorage.setItem("isLoggedIn", "true");
       alert("Logged in with Google!");
-      router.push("/");
+      router.push("/dashboard");
     } catch (error: any) {
       alert(error.message);
     }

@@ -24,6 +24,7 @@ export default function RegisterPage() {
       alert(error.message);
     }
   };
+   {/*the alerts are to change to toast notifications */}
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-blue-900 flex items-center justify-center">
