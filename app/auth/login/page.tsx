@@ -17,7 +17,7 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       localStorage.setItem("isLoggedIn", "true");
       alert("Logged in successfully!");
-      router.push("/");
+      router.push("/dashboard");
     } catch (error: any) {
       alert(error.message);
     }
