@@ -7,7 +7,7 @@ const FooterR254: React.FC = () => {
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between gap-8">
         {/* Logo, Location Card, and Brand */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <h1 className="text-2xl font-bold">BrandName</h1>
+          <h1 className="text-2xl font-bold">Ecommerce</h1>
           <p className="text-sm text-gray-400 mb-4">© 2025 All rights reserved</p>
           
           {/* Google Maps Card */}
