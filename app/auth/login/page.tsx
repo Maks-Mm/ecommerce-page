@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 export default function LoginPage() {
@@ -13,6 +13,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    const auth = getFirebaseAuth();
     try {
       await signInWithEmailAndPassword(auth, email, password);
       localStorage.setItem("isLoggedIn", "true");
@@ -22,9 +23,9 @@ export default function LoginPage() {
       alert(error.message);
     }
   };
-  {/*the alerts are to change to toast notifications */}
 
   const handleGoogleLogin = async () => {
+    const auth = getFirebaseAuth();
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
@@ -39,17 +40,10 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-blue-900 flex items-center justify-center">
       <div className="w-96 bg-gray-800 rounded-3xl shadow-lg p-8 flex flex-col">
-        <div className="flex justify-around text-gray-300 text-xs mb-6">
-          <p className="hover:text-blue-400 cursor-pointer transition">about us</p>
-          <p className="hover:text-blue-400 cursor-pointer transition">terms & conditions</p>
-          <p className="hover:text-blue-400 cursor-pointer transition">security</p>
-        </div>
-
         <h2 className="text-white text-4xl font-bold mb-6 flex flex-col">
           <span>Log</span>
           <span>in</span>
         </h2>
-
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <label className="flex flex-col text-gray-200 text-sm">
             EMAIL
@@ -61,7 +55,6 @@ export default function LoginPage() {
               className="bg-transparent border-b-2 border-gray-400 focus:border-blue-400 py-2 px-1 text-white focus:outline-none"
             />
           </label>
-
           <label className="flex flex-col text-gray-200 text-sm">
             PASSWORD
             <input
@@ -72,7 +65,6 @@ export default function LoginPage() {
               className="bg-transparent border-b-2 border-gray-400 focus:border-blue-400 py-2 px-1 text-white focus:outline-none"
             />
           </label>
-
           <button
             type="submit"
             className="mt-6 py-3 bg-blue-500 text-white rounded-full text-lg font-medium hover:bg-blue-600 transition"
@@ -80,13 +72,11 @@ export default function LoginPage() {
             Login
           </button>
         </form>
-
         <div className="flex items-center my-4">
           <div className="flex-grow border-t border-gray-600"></div>
           <span className="px-3 text-gray-400 text-sm">OR</span>
           <div className="flex-grow border-t border-gray-600"></div>
         </div>
-
         <button
           onClick={handleGoogleLogin}
           className="flex items-center justify-center gap-3 py-3 bg-white text-gray-700 rounded-full text-lg font-medium hover:bg-gray-200 transition"
@@ -94,7 +84,6 @@ export default function LoginPage() {
           <FcGoogle size={24} />
           Continue with Google
         </button>
-
         <p className="text-gray-300 text-sm mt-4 text-center">
           Don’t have an account?{" "}
           <a href="/auth/register" className="text-blue-400 hover:text-blue-300 underline transition">
