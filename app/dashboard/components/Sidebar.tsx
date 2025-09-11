@@ -20,7 +20,9 @@ export default function Sidebar({ activeIndex, onNavClick }: SidebarProps) {
 
   return (
     <nav
-      className={`bg-purple-900 text-white ${isOpen ? "w-64" : "w-16"} transition-all duration-300`}
+      className={`bg-gradient-to-b from-gray-900 to-blue-900 text-white p-4 ${
+        isOpen ? "w-64" : "w-16"
+      } transition-all duration-300`}
     >
       {/* Toggle button */}
       <button
@@ -30,8 +32,7 @@ export default function Sidebar({ activeIndex, onNavClick }: SidebarProps) {
         <i className="fa fa-bars"></i>
       </button>
 
-      {/* ADD SPACING HERE */}
-      <ul className="space-y-4"> {/* This adds vertical spacing between items */}
+      <ul className="space-y-2">
         {navItems.map((item, index) => (
           <NavItem
             key={index}
