@@ -72,6 +72,54 @@ const settingsData: SettingsData = {
 
 export default function SettingsContent() {
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<SettingItem | null>(null);
+
+  if (selected) {
+    return (
+      <div className="flex justify-center w-full">
+        <div className="bg-gray-100 min-h-screen p-6 max-w-3xl w-full">
+          <button
+            onClick={() => setSelected(null)}
+            className="mb-4 text-blue-600 hover:underline"
+          >
+            ← Back
+          </button>
+          <div className="bg-white p-6 rounded-2xl shadow">
+            <div className="flex items-center gap-4 mb-4">
+              <img src={selected.icon} alt={selected.alt} className="w-8 h-8" />
+              <h2 className="text-xl font-semibold">{selected.title}</h2>
+            </div>
+            <p className="text-gray-600 mb-6">{selected.sub}</p>
+
+            {/* Placeholder imitation of settings page */}
+            <div className="space-y-4">
+              <div className="p-4 border rounded-lg bg-gray-50">
+                <p className="text-sm text-gray-500">
+                  Example toggle for <b>{selected.title}</b>
+                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <span>Enable</span>
+                  <input type="checkbox" disabled />
+                </div>
+              </div>
+
+              <div className="p-4 border rounded-lg bg-gray-50">
+                <p className="text-sm text-gray-500">
+                  Example input for <b>{selected.title}</b>
+                </p>
+                <input
+                  type="text"
+                  placeholder={`Edit ${selected.title}`}
+                  className="border p-2 rounded w-full"
+                  disabled
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center w-full">
@@ -100,6 +148,7 @@ export default function SettingsContent() {
               {filteredItems.map((item, i) => (
                 <div
                   key={i}
+                  onClick={() => setSelected(item)}
                   className="flex items-center gap-4 p-4 hover:bg-gray-100 cursor-pointer rounded-2xl transition"
                 >
                   <img src={item.icon} alt={item.alt} className="w-6 h-6" />
