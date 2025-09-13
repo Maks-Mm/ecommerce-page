@@ -1,7 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-export default function ScheduleContent() {
+type ScheduleContentProps = {
+  sidebarColors?: string[]; // optional colors to match sidebar gradient
+};
+
+export default function ScheduleContent({ sidebarColors = ["#1f2937", "#1e40af"] }: ScheduleContentProps) {
   const months = [
     "January","February","March","April","May","June",
     "July","August","September","October","November","December"
@@ -18,11 +22,7 @@ export default function ScheduleContent() {
     "1:30 PM","1:45 PM","2:00 PM"
   ];
 
-  const sidebarColors = ["#1f2937", "#1e40af"]; // from Sidebar component
-
-  const daysInMonth = (monthIndex: number, year: number) => {
-    return new Date(year, monthIndex + 1, 0).getDate();
-  };
+  const daysInMonth = (monthIndex: number, year: number) => new Date(year, monthIndex + 1, 0).getDate();
 
   const generateCalendar = () => {
     const today = new Date();
@@ -33,7 +33,6 @@ export default function ScheduleContent() {
     const calendarRows: number[][] = [];
     let week: number[] = [];
     for (let i = 0; i < firstDay; i++) week.push(0);
-
     for (let day = 1; day <= totalDays; day++) {
       week.push(day);
       if (week.length === 7) {
@@ -41,36 +40,39 @@ export default function ScheduleContent() {
         week = [];
       }
     }
-    if (week.length) {
-      while (week.length < 7) week.push(0);
-      calendarRows.push(week);
-    }
+    if (week.length) while (week.length < 7) week.push(0);
+    if (week.length) calendarRows.push(week);
     return calendarRows;
   };
 
   const calendarRows = generateCalendar();
 
+  // Dynamic responsive direction
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const gradientBackground = `linear-gradient(to bottom, ${sidebarColors.join(", ")})`;
+  const cardFlexDirection = isMobile ? "column" : "row";
+
   return (
     <div className="weekly-schedule" style={{ padding: "20px" }}>
-      <h1
-        style={{
-          textAlign: "center",
-          marginBottom: "30px",
-          fontSize: "2.2rem",
-          fontWeight: "bold",
-          background: `linear-gradient(90deg, ${sidebarColors.join(", ")})`,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent"
-        }}
-      >
-        Schedule a Meeting with Brandon from Hubbard Labs
-      </h1>
+      {/* Main Title */}
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <h1 style={{ fontSize: "2rem", margin: 0 }}>Schedule a Meeting</h1>
+        <h2 style={{ fontSize: "1.1rem", marginTop: "5px" }}>with Brandon from Hubbard Labs</h2>
+      </div>
 
+      {/* Card */}
       <div
         className="card shadow"
         style={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: cardFlexDirection,
           borderRadius: "8px",
           overflow: "hidden",
           boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
@@ -82,7 +84,7 @@ export default function ScheduleContent() {
           style={{
             flex: 1,
             padding: "20px",
-            background: `linear-gradient(to bottom, ${sidebarColors.join(", ")})`,
+            background: gradientBackground,
             color: "#fff"
           }}
         >
@@ -94,17 +96,18 @@ export default function ScheduleContent() {
             />
             <h5 style={{ marginTop: "10px" }}>Brandon from Hubbard Labs</h5>
 
+            {/* Month Navigation */}
             <div style={{ margin: "20px 0" }}>
               <button
                 style={{ background: "none", border: "none", color: "#fff", fontSize: "20px", cursor: "pointer" }}
-                onClick={() => setCurrentMonthIndex((prev) => (prev === 0 ? 11 : prev - 1))}
+                onClick={() => setCurrentMonthIndex(prev => prev === 0 ? 11 : prev - 1)}
               >
                 &#8592;
               </button>
               <span style={{ margin: "0 10px" }}>{months[currentMonthIndex]}</span>
               <button
                 style={{ background: "none", border: "none", color: "#fff", fontSize: "20px", cursor: "pointer" }}
-                onClick={() => setCurrentMonthIndex((prev) => (prev === 11 ? 0 : prev + 1))}
+                onClick={() => setCurrentMonthIndex(prev => prev === 11 ? 0 : prev + 1)}
               >
                 &#8594;
               </button>
@@ -114,8 +117,8 @@ export default function ScheduleContent() {
             <table style={{ width: "100%", textAlign: "center", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
-                  {["SUN","MON","TUE","WED","THU","FRI","SAT"].map((day) => (
-                    <th key={day} style={{ padding: "10px 0" }}>{day}</th>
+                  {["SUN","MON","TUE","WED","THU","FRI","SAT"].map(day => (
+                    <th key={day} style={{ padding: "8px 0", fontSize: isMobile ? "0.7rem" : "1rem" }}>{day}</th>
                   ))}
                 </tr>
               </thead>
@@ -123,14 +126,14 @@ export default function ScheduleContent() {
                 {calendarRows.map((week, i) => (
                   <tr key={i}>
                     {week.map((day, idx) => (
-                      <td key={idx} style={{ padding: "8px 0" }}>
+                      <td key={idx} style={{ padding: "5px 0" }}>
                         {day === 0 ? (
                           <span style={{ display: "inline-block", width: "40px", height: "40px" }}></span>
                         ) : (
                           <button
                             onClick={() => setSelectedDay(day)}
                             style={{
-                              backgroundColor: selectedDay === day ? "#fff" : "rgba(255,255,255,0.2)",
+                              backgroundColor: selectedDay === day ? "#fff" : "#444",
                               color: selectedDay === day ? "#222" : "#fff",
                               borderRadius: "50%",
                               minWidth: "40px",
@@ -154,9 +157,9 @@ export default function ScheduleContent() {
         {/* Right Column - Meeting Options */}
         <div className="options-column" style={{ flex: 1, padding: "20px" }}>
           <h2 style={{ marginBottom: "15px" }}>How long do you need?</h2>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "25px" }}>
-            {["15 Minutes","30 Minutes","1 Hour"].map((duration) => (
-              <label key={duration} style={{ flex: 1, margin: "0 5px" }}>
+          <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", marginBottom: "25px" }}>
+            {["15 Minutes","30 Minutes","1 Hour"].map(duration => (
+              <label key={duration} style={{ flex: 1, margin: isMobile ? "5px 0" : "0 5px" }}>
                 <input
                   type="radio"
                   name="duration"
@@ -175,8 +178,14 @@ export default function ScheduleContent() {
             <option>UTC -08:00 Arizona Time (US & Canada)</option>
           </select>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "10px", maxHeight: "300px", overflowY: "scroll" }}>
-            {timeSlots.map((slot) => (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+            gap: "10px",
+            maxHeight: "300px",
+            overflowY: "scroll"
+          }}>
+            {timeSlots.map(slot => (
               <button
                 key={slot}
                 onClick={() => setSelectedTime(slot)}
