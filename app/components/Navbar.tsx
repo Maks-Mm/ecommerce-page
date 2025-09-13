@@ -51,10 +51,9 @@ export default function Navbar() {
 
     if (type === "user") {
       return (
-        <div className={`absolute right-0 mt-2 w-48 bg-white text-black shadow-xl rounded-lg overflow-hidden transition-all duration-300 ${
-            openDropdown === "user"
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 -translate-y-2 pointer-events-none"
+        <div className={`absolute right-0 mt-2 w-48 bg-white text-black shadow-xl rounded-lg overflow-hidden transition-all duration-300 ${openDropdown === "user"
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 -translate-y-2 pointer-events-none"
           }`}
         >
           <ul className="flex flex-col py-1">
@@ -75,16 +74,20 @@ export default function Navbar() {
     const width = type === "dienst" ? "w-48" : "w-56";
 
     return (
-      <div className={`absolute left-0 mt-2 ${width} bg-white text-black shadow-xl rounded-lg overflow-hidden transition-all duration-300 ${
-          openDropdown === type ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
+      <div className={`absolute left-0 mt-2 ${width} bg-white text-black shadow-xl rounded-lg overflow-hidden transition-all duration-300 ${openDropdown === type ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
         }`}
       >
         <ul className="flex flex-col py-1">
           {items.map((item, idx) => (
             <li key={idx}>
-              <Link href={`/${type}/${item.toLowerCase().replace(" ", "-")}`} className="block px-4 py-2 hover:bg-blue-50" onClick={() => setOpenDropdown(null)}>
+              <Link
+                href={`/dienst?page=${item.toLowerCase().replace(" ", "-")}`}
+                className="block px-4 py-2 hover:bg-blue-50"
+                onClick={() => setOpenDropdown(null)}
+              >
                 {item}
               </Link>
+
             </li>
           ))}
         </ul>
