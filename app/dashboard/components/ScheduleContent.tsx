@@ -12,11 +12,13 @@ export default function ScheduleContent() {
   const [selectedTime, setSelectedTime] = useState<string>("9:00 AM");
 
   const timeSlots = [
-    "9:00 AM","9:15 AM","9:30 AM","9:45 AM","10:00 AM",
-    "10:15 AM","10:30 AM","10:45 AM","11:00 AM","12:00 PM",
+    "9:00 AM","9:15 AM","9:30 AM","9:45 AM","10:00",
+    "10:15 AM","10:30 AM","10:45 AM","11:00","12:00 PM",
     "12:15 PM","12:30 PM","12:45 PM","1:00 PM","1:15 PM",
     "1:30 PM","1:45 PM","2:00 PM"
   ];
+
+  const sidebarColors = ["#1f2937", "#1e40af"]; // from Sidebar component
 
   const daysInMonth = (monthIndex: number, year: number) => {
     return new Date(year, monthIndex + 1, 0).getDate();
@@ -30,7 +32,6 @@ export default function ScheduleContent() {
 
     const calendarRows: number[][] = [];
     let week: number[] = [];
-    // Fill empty cells before first day
     for (let i = 0; i < firstDay; i++) week.push(0);
 
     for (let day = 1; day <= totalDays; day++) {
@@ -51,7 +52,17 @@ export default function ScheduleContent() {
 
   return (
     <div className="weekly-schedule" style={{ padding: "20px" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "30px", fontSize: "2.2rem" }}>
+      <h1
+        style={{
+          textAlign: "center",
+          marginBottom: "30px",
+          fontSize: "2.2rem",
+          fontWeight: "bold",
+          background: `linear-gradient(90deg, ${sidebarColors.join(", ")})`,
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent"
+        }}
+      >
         Schedule a Meeting with Brandon from Hubbard Labs
       </h1>
 
@@ -68,7 +79,12 @@ export default function ScheduleContent() {
         {/* Left Column - Calendar */}
         <div
           className="calendar-column"
-          style={{ flex: 1, padding: "20px", backgroundColor: "#222", color: "#fff" }}
+          style={{
+            flex: 1,
+            padding: "20px",
+            background: `linear-gradient(to bottom, ${sidebarColors.join(", ")})`,
+            color: "#fff"
+          }}
         >
           <div style={{ textAlign: "center" }}>
             <img
@@ -114,13 +130,13 @@ export default function ScheduleContent() {
                           <button
                             onClick={() => setSelectedDay(day)}
                             style={{
-                              backgroundColor: selectedDay === day ? "#fff" : "transparent",
+                              backgroundColor: selectedDay === day ? "#fff" : "rgba(255,255,255,0.2)",
                               color: selectedDay === day ? "#222" : "#fff",
                               borderRadius: "50%",
                               minWidth: "40px",
                               minHeight: "40px",
                               border: "none",
-                              cursor: "pointer"
+                              cursor: "pointer",
                             }}
                           >
                             {day}
