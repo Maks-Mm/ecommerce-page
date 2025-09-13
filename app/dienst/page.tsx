@@ -1,8 +1,9 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 
-export default function DienstleistungenPage() {
+// Create a separate component that uses useSearchParams
+function DienstleistungenContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const page = searchParams.get("page"); // "spa", "web", "ecom"
@@ -319,5 +320,21 @@ export default function DienstleistungenPage() {
         </section>
       )}
     </main>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function DienstleistungenPage() {
+  return (
+    <Suspense fallback={
+      <div className="p-4 md:p-10 min-h-screen bg-gray-50">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">Dienstleistungen</h1>
+        <div className="bg-white p-8 rounded-xl shadow">
+          <p className="text-gray-600">Loading services...</p>
+        </div>
+      </div>
+    }>
+      <DienstleistungenContent />
+    </Suspense>
   );
 }
