@@ -1,5 +1,6 @@
 // app/dashboard/page.tsx
 "use client";
+
 import { useState } from "react";
 import DynamicHead from "./components/DynamicHead";
 import DashboardLayout from "./components/DashboardLayout";
@@ -9,22 +10,23 @@ import ProfileContent from "./components/ProfileContent";
 import ScheduleContent from "./components/ScheduleContent";
 import SettingsContent from "./components/SettingsContent";
 
+const pagesMap = [
+  { name: "Home", Component: HomeContent },
+  { name: "Profile", Component: ProfileContent },
+  { name: "Schedule", Component: ScheduleContent },
+  { name: "Activities", Component: ActivitiesContent },
+  { name: "Settings", Component: SettingsContent },
+];
+
 export default function DashboardPage() {
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const pages = [
-    <HomeContent key="home" />,
-    <ActivitiesContent key="activities" />,
-    <ProfileContent key="profile" />,
-    <ScheduleContent key="schedule" />,
-    <SettingsContent key="settings" />,
-  ];
+  const ActivePage = pagesMap[activeIndex].Component;
 
   return (
     <>
-      <DynamicHead title={`Dashboard — ${["Home", "Activities", "Profile", "Schedule", "Settings"][activeIndex]}`} />
+      <DynamicHead title={`Dashboard — ${pagesMap[activeIndex].name}`} />
       <DashboardLayout activeIndex={activeIndex} onNavClick={setActiveIndex}>
-        {pages[activeIndex]}
+        <ActivePage />
       </DashboardLayout>
     </>
   );

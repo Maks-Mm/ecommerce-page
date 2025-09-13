@@ -59,10 +59,10 @@ export default function Navbar() {
         >
           <ul className="flex flex-col py-1">
             <li>
-              <Link href="/profile" className="block px-4 py-2 hover:bg-blue-50" onClick={() => setOpenDropdown(null)}>My Profile</Link>
+              <Link href="/dashboard" className="block px-4 py-2 hover:bg-blue-50" onClick={() => setOpenDropdown(null)}>My Profile</Link>
             </li>
             <li>
-              <Link href="/orders" className="block px-4 py-2 hover:bg-blue-50" onClick={() => setOpenDropdown(null)}>My Orders</Link>
+              <Link href="/SettingsContent" className="block px-4 py-2 hover:bg-blue-50" onClick={() => setOpenDropdown(null)}>My Settings</Link>
             </li>
           </ul>
         </div>

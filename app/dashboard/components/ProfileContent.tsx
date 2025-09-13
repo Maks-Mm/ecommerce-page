@@ -1,12 +1,12 @@
+// ProfileContent.tsx
 "use client";
 import React from "react";
 
-
 export default function ProfileContent() {
-return (
-<div className="profile-content">
-<h1>Profile</h1>
-<p>Profile details go here.</p>
-</div>
-);
+  return (
+    <div className="profile-content">
+      <h1>ProfileContent</h1>
+      {/* Add additional content for the profile page here */}
+    </div>
+  );
 }
