@@ -1,3 +1,5 @@
+//app/auth/login/page.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -5,11 +7,15 @@ import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { getFirebaseAuth } from "@/lib/firebase";
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import Toast from "../../components/Toast";
+import { useToast } from "@/hooks/useToast";
 
 export default function LoginPage() {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { toast, showToast, hideToast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,25 +23,30 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       localStorage.setItem("isLoggedIn", "true");
-      alert("Logged in successfully!");
-      router.push("/dashboard");
+      showToast("Logged in successfully!");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1500);
     } catch (error: any) {
-      alert(error.message);
+      showToast(error.message, "error");
     }
   };
 
-  const handleGoogleLogin = async () => {
+   const handleGoogleLogin = async () => {
     const auth = getFirebaseAuth();
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       localStorage.setItem("isLoggedIn", "true");
-      alert("Logged in with Google!");
-      router.push("/dashboard");
+      showToast("Logged in with Google!");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1500);
     } catch (error: any) {
-      alert(error.message);
+      showToast(error.message, "error");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-blue-900 flex items-center justify-center">
@@ -91,6 +102,13 @@ export default function LoginPage() {
           </a>
         </p>
       </div>
+       {toast.show && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={hideToast} 
+        />
+      )}
     </div>
   );
 }

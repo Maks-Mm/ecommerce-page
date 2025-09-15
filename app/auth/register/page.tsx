@@ -1,26 +1,32 @@
+//app/auth/register/page.tsx
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getFirebaseAuth } from "@/lib/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import Toast from "../../components/Toast";
+import { useToast } from "@/hooks/useToast";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const router = useRouter();
+  const { toast, showToast, hideToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const auth = getFirebaseAuth();
-    try {
+     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: fullName });
-      alert("Registered successfully! Redirecting to login...");
-      router.push("/auth/login");
+      showToast("Registered successfully! Redirecting to login...");
+      setTimeout(() => {
+        router.push("/auth/login");
+      }, 1500);
     } catch (error: any) {
-      alert(error.message);
+      showToast(error.message, "error");
     }
   };
 
@@ -76,6 +82,13 @@ export default function RegisterPage() {
           </a>
         </p>
       </div>
+       {toast.show && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={hideToast} 
+        />
+      )}
     </div>
   );
 }

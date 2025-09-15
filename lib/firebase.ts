@@ -1,6 +1,3 @@
-
-
-
 // lib/firebase.ts - TEMPORARY DEBUG VERSION
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
@@ -28,3 +25,4 @@ export const getFirebaseAuth = (): Auth => {
 
   return getAuth(app);
 };
+
