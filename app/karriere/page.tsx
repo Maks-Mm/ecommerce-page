@@ -8,54 +8,54 @@ import React, { useState } from "react";
 function SocialIcons({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-  <a
-    href="https://www.facebook.com"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Facebook"
-    className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 transition-colors"
-  >
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M22 12.07C22 6.48 17.52 2 12 2S2 6.48 2 12.07c0 4.99 3.66 9.12 8.44 9.93v-7.03H7.9v-2.9h2.54V9.41c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45h-1.25c-1.23 0-1.62.77-1.62 1.56v1.87h2.76l-.44 2.9h-2.32V22c4.78-.81 8.44-4.94 8.44-9.93z" fill="#3b5998" />
-    </svg>
-  </a>
+      <a
+        href="https://www.facebook.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Facebook"
+        className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 transition-colors"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M22 12.07C22 6.48 17.52 2 12 2S2 6.48 2 12.07c0 4.99 3.66 9.12 8.44 9.93v-7.03H7.9v-2.9h2.54V9.41c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45h-1.25c-1.23 0-1.62.77-1.62 1.56v1.87h2.76l-.44 2.9h-2.32V22c4.78-.81 8.44-4.94 8.44-9.93z" fill="#3b5998" />
+        </svg>
+      </a>
 
-  <a
-    href="https://www.instagram.com"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Instagram"
-    className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 hover:bg-pink-200 transition-colors"
-  >
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6.1A4.9 4.9 0 1 0 16.9 13 4.9 4.9 0 0 0 12 8.1zM18.3 6.2a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" fill="#E1306C" />
-    </svg>
-  </a>
+      <a
+        href="https://www.instagram.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram"
+        className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 hover:bg-pink-200 transition-colors"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6.1A4.9 4.9 0 1 0 16.9 13 4.9 4.9 0 0 0 12 8.1zM18.3 6.2a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" fill="#E1306C" />
+        </svg>
+      </a>
 
-  <a
-    href="https://www.linkedin.com"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="LinkedIn"
-    className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 transition-colors"
-  >
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M6.94 8.61H4.34V20h2.6V8.61zM5.64 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM20 20h-2.6v-5.3c0-1.26-.02-2.87-1.75-2.87-1.76 0-2.03 1.37-2.03 2.78V20H9.9V8.61h2.5v1.53h.03c.35-.66 1.21-1.36 2.5-1.36 2.67 0 3.16 1.76 3.16 4.05V20z" fill="#0077B5" />
-    </svg>
-  </a>
+      <a
+        href="https://www.linkedin.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn"
+        className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 transition-colors"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M6.94 8.61H4.34V20h2.6V8.61zM5.64 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM20 20h-2.6v-5.3c0-1.26-.02-2.87-1.75-2.87-1.76 0-2.03 1.37-2.03 2.78V20H9.9V8.61h2.5v1.53h.03c.35-.66 1.21-1.36 2.5-1.36 2.67 0 3.16 1.76 3.16 4.05V20z" fill="#0077B5" />
+        </svg>
+      </a>
 
-  <a
-    href="https://twitter.com"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Twitter"
-    className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 transition-colors"
-  >
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M22 5.92c-.64.28-1.33.47-2.05.56a3.6 3.6 0 0 0 1.58-1.98 7.13 7.13 0 0 1-2.27.87 3.56 3.56 0 0 0-6.06 3.25 10.1 10.1 0 0 1-7.33-3.72 3.56 3.56 0 0 0 1.1 4.74c-.51 0-1-.15-1.44-.38v.04a3.56 3.56 0 0 0 2.86 3.49c-.49.13-1.01.17-1.54.06a3.57 3.57 0 0 0 3.33 2.48A7.14 7.14 0 0 1 2 18.57 10.07 10.07 0 0 0 7 20c6.04 0 9.36-5 9.36-9.33v-.43A6.64 6.64 0 0 0 22 5.92z" fill="#1DA1F2" />
-    </svg>
-  </a>
-</div>
+      <a
+        href="https://twitter.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Twitter"
+        className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 transition-colors"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M22 5.92c-.64.28-1.33.47-2.05.56a3.6 3.6 0 0 0 1.58-1.98 7.13 7.13 0 0 1-2.27.87 3.56 3.56 0 0 0-6.06 3.25 10.1 10.1 0 0 1-7.33-3.72 3.56 3.56 0 0 0 1.1 4.74c-.51 0-1-.15-1.44-.38v.04a3.56 3.56 0 0 0 2.86 3.49c-.49.13-1.01.17-1.54.06a3.57 3.57 0 0 0 3.33 2.48A7.14 7.14 0 0 1 2 18.57 10.07 10.07 0 0 0 7 20c6.04 0 9.36-5 9.36-9.33v-.43A6.64 6.64 0 0 0 22 5.92z" fill="#1DA1F2" />
+        </svg>
+      </a>
+    </div>
 
   );
 }
@@ -275,9 +275,11 @@ export default function Karriere() {
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto flex justify-center mb-6">
-        <SocialIcons />
-      </div>
+    <div className="max-w-6xl mx-auto flex justify-center mb-6 bg-white">
+  <SocialIcons className="bg-white" />
+</div>
+
+
 
     </main>
   );
