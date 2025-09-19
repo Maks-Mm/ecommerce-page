@@ -1,95 +1,105 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
-/* ---------- CONFIG ---------- */
 const PUBLISHER_ID = "ca-pub-5404208486949480";
-//const TEST_MODE = false;
-const TEST_MODE = process.env.NODE_ENV !== "production";
-
 const TEST_CLIENT = "ca-pub-3940256099942544";
 const TEST_SLOT = "6300978111";
-
-const adSlotMap: Record<string, string> = {
-  "hero": "4898236638",
-  "ad-1": "1111111111",
-  "ad-2": "2222222222",
-  "ad-3": "3333333333",
-  "ad-4": "4444444444",
-  "ad-5": "5555555555",
-  "ad-6": "6666666666",
-};
 
 type Size = "small" | "medium" | "large";
 
 interface DynamicAdProps {
-  slotId: string;
+  slotId?: string;
   size?: Size;
   className?: string;
 }
 
-type AdContent = {
-  title: string;
-  description?: string;
-  imageUrl?: string;
-  link: string;
-};
+// Correct AdSense global interface
+declare global {
+  interface Window {
+    adsbygoogle: unknown[];
+  }
+}
 
-/* ---------- Simulated Ads ---------- */
-const simulatedAds: AdContent[] = [
-  {
-    title: "Cloud-Speicherlösungen",
-    description: "Sichern Sie Ihre Unternehmensdaten.",
-    imageUrl: "https://images.pexels.com/photos/1181676/pexels-photo-1181676.jpeg",
-    link: "#",
-  },
-  {
-    title: "VPN-Service für Unternehmen",
-    description: "Schützen Sie Ihr Team online.",
-    imageUrl: "https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg",
-    link: "#",
-  },
-  {
-    title: "Business Analytics Tool",
-    description: "Treffen Sie klügere Entscheidungen.",
-    imageUrl: "https://images.pexels.com/photos/669610/pexels-photo-669610.jpeg",
-    link: "#",
-  },
-];
-
-/* ---------- Component ---------- */
 export default function DynamicAd({ slotId, size = "medium", className = "" }: DynamicAdProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(true); // always visible immediately
+  const [ads, setAds] = useState<any[]>([]);
   const [simIndex, setSimIndex] = useState(0);
-
+  const [adInitialized, setAdInitialized] = useState(false);
+  
+  // Use test mode in development
+  const TEST_MODE = process.env.NODE_ENV === "development";
   const height = size === "large" ? 250 : size === "small" ? 60 : 120;
-  const mappedSlot = adSlotMap[slotId];
 
-  /* ---------- Rotate Simulated Ads ---------- */
+  // Fetch ads from Firestore if no slotId and not in test mode
   useEffect(() => {
-    if (mappedSlot || TEST_MODE) return;
-    const t = setInterval(() => setSimIndex((s) => (s + 1) % simulatedAds.length), 5000);
-    return () => clearInterval(t);
-  }, [mappedSlot]);
+    if (slotId || TEST_MODE) return;
 
-  /* ---------- Load Google Ads ---------- */
-  useEffect(() => {
-    if (!visible) return;
-    if (mappedSlot || TEST_MODE) {
+    const fetchAds = async () => {
       try {
-        // @ts-ignore
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        const querySnapshot = await getDocs(collection(db, "ads"));
+        const fetchedAds = querySnapshot.docs.map((doc) => doc.data());
+        setAds(fetchedAds.length ? fetchedAds : []);
       } catch (err) {
-        console.warn("adsbygoogle.push error:", err);
+        console.warn("Error fetching ads:", err);
       }
-    }
-  }, [visible, mappedSlot]);
+    };
 
-  /* ---------- Render ---------- */
-  if ((mappedSlot || TEST_MODE) && visible) {
+    fetchAds();
+  }, [slotId, TEST_MODE]);
+
+  // Rotate ads
+  useEffect(() => {
+    if (slotId || TEST_MODE || ads.length === 0) return;
+    const t = setInterval(() => setSimIndex((s) => (s + 1) % ads.length), 5000);
+    return () => clearInterval(t);
+  }, [ads, slotId, TEST_MODE]);
+
+  // Initialize AdSense
+  useEffect(() => {
+    if (!slotId && !TEST_MODE) return;
+    if (adInitialized) return;
+
+    const initializeAdSense = () => {
+      try {
+        // Initialize the ad - this is the correct way AdSense expects
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        setAdInitialized(true);
+      } catch (err) {
+        console.warn("AdSense initialization error:", err);
+      }
+    };
+
+    if (typeof window === "undefined") return;
+
+    if (window.adsbygoogle) {
+      initializeAdSense();
+    } else {
+      // Load the script
+      const script = document.createElement("script");
+      const client = TEST_MODE ? TEST_CLIENT : PUBLISHER_ID;
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`;
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      
+      script.onload = () => {
+        setTimeout(initializeAdSense, 100);
+      };
+      
+      script.onerror = () => {
+        console.warn("AdSense script failed to load");
+      };
+
+      document.head.appendChild(script);
+    }
+  }, [slotId, TEST_MODE, adInitialized]);
+
+  // Render Google ad if slotId exists or in test mode
+  if (slotId || TEST_MODE) {
     const client = TEST_MODE ? TEST_CLIENT : PUBLISHER_ID;
-    const slot = TEST_MODE ? TEST_SLOT : mappedSlot;
+    const slot = TEST_MODE ? TEST_SLOT : slotId;
 
     return (
       <div ref={containerRef} className={`w-full ${className}`} aria-hidden>
@@ -105,8 +115,14 @@ export default function DynamicAd({ slotId, size = "medium", className = "" }: D
     );
   }
 
-  /* ---------- Simulated Ad Fallback ---------- */
-  const ad = simulatedAds[simIndex];
+  // Render Firestore ad or fallback
+  const ad = ads[simIndex] || {
+    title: "Cloud-Speicherlösungen",
+    description: "Sichern Sie Ihre Unternehmensdaten.",
+    imageUrl: "https://images.pexels.com/photos/1181676/pexels-photo-1181676.jpeg",
+    link: "#",
+  };
+
   return (
     <div
       ref={containerRef}
@@ -119,7 +135,7 @@ export default function DynamicAd({ slotId, size = "medium", className = "" }: D
         <div className="w-full flex items-center p-3 border border-gray-200 rounded-lg shadow-sm bg-white">
           {ad.imageUrl && (
             <img
-              src={ad.imageUrl}
+              src={`${ad.imageUrl}?v=${Date.now()}`}
               alt={ad.title}
               className="w-20 h-20 object-cover mr-3 rounded"
               loading="lazy"

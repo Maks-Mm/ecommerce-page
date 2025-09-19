@@ -15,7 +15,7 @@ const Hero: React.FC<HeroProps> = () => {
 
   const [activeStep, setActiveStep] = useState(0);
 
-  
+
 
 
   return (
@@ -66,8 +66,6 @@ const Hero: React.FC<HeroProps> = () => {
 
         </div>
       </div>
-
-
 
       {/* SOLUTIONS SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-12">
@@ -341,37 +339,40 @@ const Hero: React.FC<HeroProps> = () => {
       </div>
 
       <section className="py-16 bg-gray-50">
-  <div className="max-w-6xl mx-auto px-4 text-center">
+        <div className="max-w-6xl mx-auto px-4 text-center">
 
-    {/* Grid of 6 boxes */}
+          {/* Grid of 6 boxes */}
 
-    
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-      {[1, 2, 3, 4, 5, 6].map((item) => (
-        <div key={item} className="flex flex-col items-center">
-          {/* Image box */}
-          <div className="w-full bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          {/*<DynamicAd/> : here were implemented the dynamic ads */}
-            <img
-              src={`https://picsum.photos/seed/demo-${item}/600/400`}
-              alt={`Beispiel ${item}`}
-              className="w-full h-48 object-cover"
-            />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div key={item} className="flex flex-col items-center">
+                {/* Image box */}
+                <div className="w-full bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                  {/*<DynamicAd slotId="YOUR_ACTUAL_AD_SLOT_ID" size="medium" />
+                  we have a issue after the components render probably are the example and ads from AdMob conflicting?
+                  */}
+                  
+                  <img
+                    src={`https://picsum.photos/seed/demo-${item}/600/400`}
+                    alt={`Beispiel ${item}`}
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+
+                {/* Text UNDER the card */}
+                <h3 className="mt-4 text-2xl font-bold text-gray-800">
+                  Beispiel {item}
+                </h3>
+                <p className="mt-2 text-gray-600 text-base max-w-md">
+                  Kurzer Beschreibungstext für Box {item}. Dies ist ein Beispiel mit
+                  Bild oben und Text darunter.
+                </p>
+              </div>
+            ))}
           </div>
-
-          {/* Text UNDER the card */}
-          <h3 className="mt-4 text-2xl font-bold text-gray-800">
-            Beispiel {item}
-          </h3>
-          <p className="mt-2 text-gray-600 text-base max-w-md">
-            Kurzer Beschreibungstext für Box {item}. Dies ist ein Beispiel mit
-            Bild oben und Text darunter.
-          </p>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
 
 

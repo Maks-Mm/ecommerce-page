@@ -1,5 +1,9 @@
+//app/components/TimeLabelButtons.tsx
+
+"use client";
+
 import React, { useState } from 'react';
-import { FaTrash, FaEye, FaPlus, FaChartLine } from 'react-icons/fa'; // Example icons
+import { FaTrash, FaEye, FaPlus, FaChartLine } from 'react-icons/fa';
 
 const steps = [
   {
