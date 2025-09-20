@@ -3,15 +3,27 @@
 
 "use client";
 
-import React from 'react';
+import React, { JSX } from 'react';
 import DynamicAd from './DynamicAd';
 import { GiConfirmed } from 'react-icons/gi';
 import { useState } from 'react';
 import TimeLabelButtons from './TimeLabelButtons';
+import { FaTrash, FaTasks, FaStar } from 'react-icons/fa';
 
 interface HeroProps { }
 
 const Hero: React.FC<HeroProps> = () => {
+
+  type HeroString =
+    | 'Bewertungen löschen'
+    | 'Bewertungen effizient verwalten'
+    | 'Positive Bewertungen aufbauen';
+
+  const stringIcons: Record<HeroString, JSX.Element> = {
+    'Bewertungen löschen': <FaTrash className="text-gray-600 w-5 h-5" />,
+    'Bewertungen effizient verwalten': <FaTasks className="text-gray-600 w-5 h-5" />,
+    'Positive Bewertungen aufbauen': <FaStar className="text-gray-600 w-5 h-5" />,
+  };
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -35,14 +47,21 @@ const Hero: React.FC<HeroProps> = () => {
               <span className="block text-gray-800">Ihres Unternehmens</span>
             </h1>
 
-
             <div className="mt-6 md:mt-8 space-y-3 text-gray-700 text-base md:text-lg">
-              {['Bewertungen löschen', 'Bewertungen effizient verwalten', 'Positive Bewertungen aufbauen'].map((text, idx) => (
-                <div key={idx} className="flex items-start p-3 rounded-lg hover:bg-blue-50 transition-colors">
+              {(Object.keys(stringIcons) as HeroString[]).map((text, idx) => (
+                <button
+                  key={idx}
+                  className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors"
+                  onClick={() => console.log(text)}
+                >
+                  {/* Icon */}
+                  <span className="mr-3">{stringIcons[text]}</span>
                   <span className="font-medium">{text}</span>
-                </div>
+                </button>
               ))}
             </div>
+
+
 
             <button
               className="mt-6 md:mt-8 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full text-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
@@ -352,7 +371,7 @@ const Hero: React.FC<HeroProps> = () => {
                   {/*<DynamicAd slotId="YOUR_ACTUAL_AD_SLOT_ID" size="medium" />
                   we have a issue after the components render probably are the example and ads from AdMob conflicting?
                   */}
-                  
+
                   <img
                     src={`https://picsum.photos/seed/demo-${item}/600/400`}
                     alt={`Beispiel ${item}`}

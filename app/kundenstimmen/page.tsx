@@ -190,11 +190,7 @@ function Kundenstimmen() {
         </div>
       </div>
       
-      <footer className="py-8 text-center text-gray-600 border-t border-gray-300">
-        <div className="container mx-auto px-4">
-          <p>© 2023 Ihr Unternehmen. Alle Rechte vorbehalten.</p>
-        </div>
-      </footer>
+    
     </div>
   );
 }
