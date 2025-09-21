@@ -26,8 +26,6 @@ export default function Sidebar({ activeIndex, onNavClick }: SidebarProps) {
       } transition-all duration-300 hidden md:block`} // Hidden on mobile, shown on desktop
     >
       {/* Toggle button - hidden on mobile */}
-      
-
       <ul className="space-y-2">
         {navItems.map((item, index) => (
           <NavItem
@@ -40,11 +38,6 @@ export default function Sidebar({ activeIndex, onNavClick }: SidebarProps) {
           />
         ))}
       </ul>
-      
-      {/* Footer */}
-      <div className="mt-auto pt-4 border-t border-gray-700 text-center text-xs text-gray-400">
-        <p>© 2023 Dashboard v1.0</p>
-      </div>
     </nav>
   );
 }

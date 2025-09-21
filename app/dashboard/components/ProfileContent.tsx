@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 interface User {
   id: number;
   name: string;
-  username: string;
   email: string;
   avatar: string;
   coverImage: string;
@@ -21,11 +20,10 @@ interface User {
 // Mock user data
 const mockUser: User = {
   id: 1,
-  name: "Alex Johnson",
-  username: "alexj",
+  name: "Unknown User",
   email: "alex.johnson@example.com",
-  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  coverImage: "https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+  avatar: "https://www.shutterstock.com/image-vector/blank-image-placeholder-profile-picture-260nw-1923893873.jpg",
+  coverImage: "https://media.istockphoto.com/id/2148169735/photo/woman-hiking-through-the-meadow-in-swiss-alps-in-morning.webp?a=1&b=1&s=612x612&w=0&k=20&c=u1AjftqJefF228xLO4hcEhsDebCG0vTBWr9IdkSPlPI=",
   bio: "Frontend developer passionate about React and UX design. Love hiking and photography in my free time.",
   location: "San Francisco, CA",
   website: "alexjohnson.dev",
@@ -38,7 +36,7 @@ const mockUser: User = {
 export default function ProfileContent() {
   const [user, setUser] = useState<User>(mockUser);
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({...user});
+  const [editForm, setEditForm] = useState({ ...user });
 
   const handleEditToggle = () => {
     if (isEditing) {
@@ -64,18 +62,13 @@ export default function ProfileContent() {
     <div className="profile-content max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
       {/* Cover Photo */}
       <div className="h-48 bg-gradient-to-r from-blue-500 to-purple-600 relative">
-        <img 
-          src={user.coverImage} 
-          alt="Cover" 
+        <img
+          src={user.coverImage}
+          alt="Cover"
           className="w-full h-full object-cover"
         />
         <div className="absolute bottom-0 right-0 m-4">
-          <button 
-            className="bg-white text-gray-800 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition-colors"
-            onClick={() => {/* Add cover photo change logic */}}
-          >
-            Edit Cover
-          </button>
+
         </div>
       </div>
 
@@ -84,14 +77,14 @@ export default function ProfileContent() {
         <div className="flex justify-between items-start mt-[-60px]">
           <div className="flex items-end">
             <div className="relative">
-              <img 
-                src={user.avatar} 
+              <img
+                src={user.avatar}
                 alt={user.name}
                 className="w-32 h-32 rounded-full border-4 border-white object-cover"
               />
-              <button 
+              <button
                 className="absolute bottom-2 right-2 bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition-colors"
-                onClick={() => {/* Add avatar change logic */}}
+                onClick={() => {/* Add avatar change logic */ }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -110,34 +103,11 @@ export default function ProfileContent() {
               ) : (
                 <h1 className="text-2xl font-bold">{user.name}</h1>
               )}
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="username"
-                  value={editForm.username}
-                  onChange={handleInputChange}
-                  className="text-gray-600 bg-gray-100 rounded px-2 py-1"
-                  placeholder="Username"
-                />
-              ) : (
-                <p className="text-gray-600">@{user.username}</p>
-              )}
+
             </div>
           </div>
-          
+
           <div className="flex space-x-3 mt-4">
-            <button 
-              className="bg-blue-500 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-600 transition-colors"
-              onClick={handleFollow}
-            >
-              {user.followers === 1248 ? 'Follow' : 'Unfollow'}
-            </button>
-            <button 
-              className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition-colors"
-              onClick={handleEditToggle}
-            >
-              {isEditing ? 'Save' : 'Edit Profile'}
-            </button>
             <button className="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -160,7 +130,7 @@ export default function ProfileContent() {
           ) : (
             <p className="text-gray-800 mb-3">{user.bio}</p>
           )}
-          
+
           <div className="flex flex-wrap items-center text-gray-600 text-sm">
             {isEditing ? (
               <input
@@ -180,7 +150,7 @@ export default function ProfileContent() {
                 {user.location}
               </span>
             )}
-            
+
             {isEditing ? (
               <input
                 type="text"
@@ -198,7 +168,7 @@ export default function ProfileContent() {
                 {user.website}
               </span>
             )}
-            
+
             <span className="flex items-center mr-4 mb-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -237,15 +207,14 @@ export default function ProfileContent() {
       {/* Sample Post */}
       <div className="p-6 border-t border-gray-100">
         <div className="flex">
-          <img 
-            src={user.avatar} 
+          <img
+            src={user.avatar}
             alt={user.name}
             className="w-10 h-10 rounded-full object-cover"
           />
           <div className="ml-4 flex-1">
             <div className="flex items-center">
               <span className="font-semibold">{user.name}</span>
-              <span className="text-gray-500 text-sm ml-2">@${user.username} · 2h</span>
             </div>
             <p className="mt-1">Just launched my new portfolio website! Built with Next.js and Tailwind CSS. Check it out and let me know what you think! 🚀</p>
             <div className="flex mt-3 text-gray-500">
