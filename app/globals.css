@@ -15,3 +15,26 @@
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
 }
+
+/* Ensure proper dashboard layout */
+.dashboard-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* Mobile first styles */
+@media (min-width: 768px) {
+  .dashboard-main {
+    flex-direction: row;
+  }
+  
+  .dashboard-content {
+    padding: 1.5rem;
+  }
+}
