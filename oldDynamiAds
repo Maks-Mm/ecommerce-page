@@ -5,6 +5,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 const PUBLISHER_ID = "ca-pub-5404208486949480";
+const TEST_CLIENT = "ca-pub-3940256099942544";
+const TEST_SLOT = "6300978111";
 
 type Size = "small" | "medium" | "large";
 
@@ -14,6 +16,7 @@ interface DynamicAdProps {
   className?: string;
 }
 
+// Correct AdSense global interface
 declare global {
   interface Window {
     adsbygoogle: unknown[];
@@ -25,13 +28,14 @@ export default function DynamicAd({ slotId, size = "medium", className = "" }: D
   const [ads, setAds] = useState<any[]>([]);
   const [simIndex, setSimIndex] = useState(0);
   const [adInitialized, setAdInitialized] = useState(false);
-
-  const isDev = process.env.NODE_ENV === "development";
+  
+  // Use test mode in development
+  const TEST_MODE = process.env.NODE_ENV === "development";
   const height = size === "large" ? 250 : size === "small" ? 60 : 120;
 
-  // 🔹 Fetch Firestore ads in dev mode or if no AdSense slot provided
+  // Fetch ads from Firestore if no slotId and not in test mode
   useEffect(() => {
-    if (slotId && !isDev) return;
+    if (slotId || TEST_MODE) return;
 
     const fetchAds = async () => {
       try {
@@ -44,21 +48,23 @@ export default function DynamicAd({ slotId, size = "medium", className = "" }: D
     };
 
     fetchAds();
-  }, [slotId, isDev]);
+  }, [slotId, TEST_MODE]);
 
-  // 🔹 Rotate Firestore ads
+  // Rotate ads
   useEffect(() => {
-    if ((slotId && !isDev) || ads.length === 0) return;
+    if (slotId || TEST_MODE || ads.length === 0) return;
     const t = setInterval(() => setSimIndex((s) => (s + 1) % ads.length), 5000);
     return () => clearInterval(t);
-  }, [ads, slotId, isDev]);
+  }, [ads, slotId, TEST_MODE]);
 
-  // 🔹 Initialize AdSense only in production
+  // Initialize AdSense
   useEffect(() => {
-    if (isDev || !slotId || adInitialized) return;
+    if (!slotId && !TEST_MODE) return;
+    if (adInitialized) return;
 
     const initializeAdSense = () => {
       try {
+        // Initialize the ad - this is the correct way AdSense expects
         (window.adsbygoogle = window.adsbygoogle || []).push({});
         setAdInitialized(true);
       } catch (err) {
@@ -71,32 +77,37 @@ export default function DynamicAd({ slotId, size = "medium", className = "" }: D
     if (window.adsbygoogle) {
       initializeAdSense();
     } else {
+      // Load the script
       const script = document.createElement("script");
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${PUBLISHER_ID}`;
+      const client = TEST_MODE ? TEST_CLIENT : PUBLISHER_ID;
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`;
       script.async = true;
       script.crossOrigin = "anonymous";
-
+      
       script.onload = () => {
         setTimeout(initializeAdSense, 100);
       };
-
+      
       script.onerror = () => {
         console.warn("AdSense script failed to load");
       };
 
       document.head.appendChild(script);
     }
-  }, [slotId, adInitialized, isDev]);
+  }, [slotId, TEST_MODE, adInitialized]);
 
-  // 🔹 Render Google ad only in production
-  if (slotId && !isDev) {
+  // Render Google ad if slotId exists or in test mode
+  if (slotId || TEST_MODE) {
+    const client = TEST_MODE ? TEST_CLIENT : PUBLISHER_ID;
+    const slot = TEST_MODE ? TEST_SLOT : slotId;
+
     return (
       <div ref={containerRef} className={`w-full ${className}`} aria-hidden>
         <ins
           className="adsbygoogle block"
           style={{ display: "block", width: "100%", minHeight: height }}
-          data-ad-client={PUBLISHER_ID}
-          data-ad-slot={slotId}
+          data-ad-client={client}
+          data-ad-slot={slot}
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
@@ -104,7 +115,7 @@ export default function DynamicAd({ slotId, size = "medium", className = "" }: D
     );
   }
 
-  // 🔹 Render Firestore fallback ad
+  // Render Firestore ad or fallback
   const ad = ads[simIndex] || {
     title: "Cloud-Speicherlösungen",
     description: "Sichern Sie Ihre Unternehmensdaten.",
