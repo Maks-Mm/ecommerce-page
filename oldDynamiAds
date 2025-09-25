@@ -1,153 +1,158 @@
-"use client";
+I see what’s going on 👍
 
-import { useEffect, useRef, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+Let me break it down step by step so it’s clear why you’re only seeing example **images** and not **dynamic ads / data**:
 
-const PUBLISHER_ID = "ca-pub-5404208486949480";
-const TEST_CLIENT = "ca-pub-3940256099942544";
-const TEST_SLOT = "6300978111";
+---
 
-type Size = "small" | "medium" | "large";
+### 🔎 What your code does now
 
-interface DynamicAdProps {
-  slotId?: string;
-  size?: Size;
-  className?: string;
-}
+1. **`DynamicAd` component**
 
-// Correct AdSense global interface
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
-  }
-}
+   * In **development mode (`isDev`)**:
 
-export default function DynamicAd({ slotId, size = "medium", className = "" }: DynamicAdProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [ads, setAds] = useState<any[]>([]);
-  const [simIndex, setSimIndex] = useState(0);
-  const [adInitialized, setAdInitialized] = useState(false);
-  
-  // Use test mode in development
-  const TEST_MODE = process.env.NODE_ENV === "development";
-  const height = size === "large" ? 250 : size === "small" ? 60 : 120;
+     * It does **not** load Google AdSense (good, no CORS errors).
+     * It instead fetches from your Firestore collection `"ads"`.
+     * If that collection is **empty**, it falls back to a **hardcoded example ad** (cloud storage with Pexels image).
+   * In **production (`!isDev`)**:
 
-  // Fetch ads from Firestore if no slotId and not in test mode
-  useEffect(() => {
-    if (slotId || TEST_MODE) return;
+     * If you pass a real `slotId`, it loads **Google AdSense**.
+     * If you don’t pass a `slotId`, it does the same as dev → Firestore ads or fallback example.
 
-    const fetchAds = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "ads"));
-        const fetchedAds = querySnapshot.docs.map((doc) => doc.data());
-        setAds(fetchedAds.length ? fetchedAds : []);
-      } catch (err) {
-        console.warn("Error fetching ads:", err);
-      }
-    };
+2. **In your `Hero` component**
 
-    fetchAds();
-  }, [slotId, TEST_MODE]);
+   * The `DynamicAd` is actually **commented out**:
 
-  // Rotate ads
-  useEffect(() => {
-    if (slotId || TEST_MODE || ads.length === 0) return;
-    const t = setInterval(() => setSimIndex((s) => (s + 1) % ads.length), 5000);
-    return () => clearInterval(t);
-  }, [ads, slotId, TEST_MODE]);
+     ```tsx
+     {/* <DynamicAd slotId="YOUR_ACTUAL_AD_SLOT_ID" size="medium" /> */}
+     ```
+   * Instead, you just render static example images from **`https://picsum.photos`** inside the 6 blog boxes.
 
-  // Initialize AdSense
-  useEffect(() => {
-    if (!slotId && !TEST_MODE) return;
-    if (adInitialized) return;
+   👉 That’s why you **only see example images**, because you aren’t actually rendering `DynamicAd` anywhere right now.
 
-    const initializeAdSense = () => {
-      try {
-        // Initialize the ad - this is the correct way AdSense expects
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        setAdInitialized(true);
-      } catch (err) {
-        console.warn("AdSense initialization error:", err);
-      }
-    };
+---
 
-    if (typeof window === "undefined") return;
+### ⚡ Why no "dates" show up
 
-    if (window.adsbygoogle) {
-      initializeAdSense();
-    } else {
-      // Load the script
-      const script = document.createElement("script");
-      const client = TEST_MODE ? TEST_CLIENT : PUBLISHER_ID;
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`;
-      script.async = true;
-      script.crossOrigin = "anonymous";
-      
-      script.onload = () => {
-        setTimeout(initializeAdSense, 100);
-      };
-      
-      script.onerror = () => {
-        console.warn("AdSense script failed to load");
-      };
+* Your `DynamicAd` doesn’t return anything with dates — it only returns:
 
-      document.head.appendChild(script);
-    }
-  }, [slotId, TEST_MODE, adInitialized]);
+  * **AdSense `<ins>` tag** (if `slotId` + production).
+  * **Firestore ad card** (if ads exist in `ads` collection).
+  * **Fallback static hardcoded ad** (if Firestore empty).
 
-  // Render Google ad if slotId exists or in test mode
-  if (slotId || TEST_MODE) {
-    const client = TEST_MODE ? TEST_CLIENT : PUBLISHER_ID;
-    const slot = TEST_MODE ? TEST_SLOT : slotId;
+So if your Firestore `"ads"` collection has no documents with `{ title, description, imageUrl, link }`, you’ll always just get the **fallback Pexels image** — no “dates”.
 
-    return (
-      <div ref={containerRef} className={`w-full ${className}`} aria-hidden>
-        <ins
-          className="adsbygoogle block"
-          style={{ display: "block", width: "100%", minHeight: height }}
-          data-ad-client={client}
-          data-ad-slot={slot}
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </div>
-    );
-  }
+---
 
-  // Render Firestore ad or fallback
-  const ad = ads[simIndex] || {
-    title: "Cloud-Speicherlösungen",
-    description: "Sichern Sie Ihre Unternehmensdaten.",
-    imageUrl: "https://images.pexels.com/photos/1181676/pexels-photo-1181676.jpeg",
-    link: "#",
-  };
+### ✅ How to fix it
 
-  return (
-    <div
-      ref={containerRef}
-      className={`w-full ${className}`}
-      style={{ minHeight: height }}
-      role="region"
-      aria-label="Gesponserte Anzeige"
-    >
-      <a href={ad.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-        <div className="w-full flex items-center p-3 border border-gray-200 rounded-lg shadow-sm bg-white">
-          {ad.imageUrl && (
-            <img
-              src={`${ad.imageUrl}?v=${Date.now()}`}
-              alt={ad.title}
-              className="w-20 h-20 object-cover mr-3 rounded"
-              loading="lazy"
-            />
-          )}
-          <div className="flex-1 text-left">
-            <div className="text-sm font-medium text-gray-900">{ad.title}</div>
-            {ad.description && <div className="text-xs text-gray-600">{ad.description}</div>}
-          </div>
-          <div className="text-xs text-gray-400 ml-3">Gesponsert</div>
-        </div>
-      </a>
-    </div>
-  );
-}
+You have two paths:
+
+1. **If you want real Google ads in production**
+
+   * Replace `"YOUR_ACTUAL_AD_SLOT_ID"` with your **real AdSense ad slot ID** (from your AdSense account).
+   * Deploy to production → Google will fill the ad space automatically.
+
+   ```tsx
+   <DynamicAd slotId="1234567890" size="medium" />
+   ```
+
+2. **If you want custom Firestore ads**
+
+   * Go to Firestore → create a collection `ads` with documents like:
+
+     ```json
+     {
+       "title": "50% Rabatt auf T-Shirts",
+       "description": "Nur diese Woche im Online-Shop!",
+       "imageUrl": "https://example.com/ad1.jpg",
+       "link": "https://yourshop.com/t-shirts"
+     }
+     ```
+   * Then, in dev mode or without slotId, your component will show those ads instead of the fallback.
+
+3. **If you want to use DynamicAd inside the Blog grid**
+
+   * Uncomment it in `Hero.tsx`:
+
+     ```tsx
+     <DynamicAd size="medium" />
+     ```
+   * That will show either Firestore ads (dev) or AdSense ads (prod).
+
+---
+
+👉 So right now, nothing is broken. You’re just seeing placeholders because:
+
+* In `Hero` the ad is commented out.
+* Firestore probably has no `ads` data.
+* No real `slotId` was passed for AdSense.
+
+---
+
+Would you like me to **rewrite your Blog section** so it **actually uses `DynamicAd`** (with Firestore fallback in dev, AdSense in prod), instead of only placeholder images?
+  next staps 
+
+  Aha, ich sehe genau, wo du gerade bist 👀
+
+Du bist in **Firebase → Firestore Database**, und du hast schon eine **Collection `ADS-GOOGLE`** mit einem **Document (`DiHPwqdPJPcmKD100ZZk`)**, aber das Dokument ist **leer** („This document does not contain any data“).
+
+👉 Das ist der Grund, warum deine `DynamicAd`-Komponente nur den **Fallback (Cloud-Speicherlösungen / Pexels Bild)** zeigt — sie bekommt keine Daten aus Firestore.
+
+---
+
+## ✅ Nächster Schritt: Felder im Dokument anlegen
+
+1. Geh in Firestore → **Collection: `ADS-GOOGLE`**
+2. Klick auf dein Dokument (`DiHPwqdPJPcmKD100ZZk`)
+3. Klick **“Add field”**
+4. Trage diese Felder ein:
+
+| Field         | Type   | Value (Beispiel)                  |
+| ------------- | ------ | --------------------------------- |
+| `title`       | string | `50% Rabatt auf T-Shirts`         |
+| `description` | string | `Nur diese Woche im Online-Shop!` |
+| `imageUrl`    | string | `https://yourcdn.com/ad1.jpg`     |
+| `link`        | string | `https://yourshop.com/t-shirts`   |
+
+⚠️ Wichtig: Groß/Kleinschreibung der Feldnamen muss **genau so** sein (`title`, `description`, `imageUrl`, `link`).
+
+---
+
+## 🔹 Alternative: Mehrere Ads
+
+Wenn du mehrere Anzeigen rotieren willst:
+
+* Lege **mehrere Dokumente** in der gleichen Collection an (`ad1`, `ad2`, `ad3`).
+* Beispiel:
+
+  ```
+  ads (collection)
+    ├── ad1 (doc)
+    │   ├── title: "50% Rabatt auf T-Shirts"
+    │   ├── description: "Nur diese Woche!"
+    │   ├── imageUrl: "https://..."
+    │   └── link: "https://..."
+    ├── ad2 (doc)
+    │   ├── title: "Neue Sneaker Kollektion"
+    │   ├── description: "Jetzt vorbestellen"
+    │   ├── imageUrl: "https://..."
+    │   └── link: "https://..."
+  ```
+
+Deine `DynamicAd` holt dann alle Dokumente und wechselt alle 5 Sekunden (`setInterval`).
+
+---
+
+## 🔹 Nächster Test
+
+Wenn du jetzt **neu startest** (`npm run dev` oder `yarn dev`) und in deiner Seite `<DynamicAd />` eingebaut ist, solltest du im Browser sehen:
+
+* Dein `title`
+* Dein `description`
+* Dein `imageUrl` als Bild
+* Dein `link` als klickbarer Banner
+
+---
+
+👉 Frage:
+Willst du deine **Collection** wirklich `ADS-GOOGLE` nennen, oder soll ich dir die Komponente so umbauen, dass sie stattdessen die Collection `ads` verwendet (kürzer, sauberer, und ohne “GOOGLE” im Namen)?

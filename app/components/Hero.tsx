@@ -371,6 +371,8 @@ const Hero: React.FC<HeroProps> = () => {
                   {/*<DynamicAd slotId="YOUR_ACTUAL_AD_SLOT_ID" size="medium" />
                   we have a issue after the components render probably are the example and ads from AdMob conflicting?
                   */}
+                 {/* <DynamicAd slotId="1234567890" size="medium" /> */}
+                  <DynamicAd size="medium" />
 
                   <img
                     src={`https://picsum.photos/seed/demo-${item}/600/400`}
