@@ -1,142 +1,48 @@
+// components/DynamicAd.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-
-const PUBLISHER_ID = "ca-pub-5404208486949480";
-
-type Size = "small" | "medium" | "large";
+import { useEffect, useState } from "react";
+import { fetchAds, Ad } from "@/lib/fetchAds";
 
 interface DynamicAdProps {
-  slotId?: string;
-  size?: Size;
-  className?: string;
+  size?: "small" | "medium" | "large";
+  className?: string; // 👈 allow className
 }
 
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
-  }
-}
+export default function DynamicAd({ size = "medium", className = "" }: DynamicAdProps) {
+  const [ad, setAd] = useState<Ad | null>(null);
 
-export default function DynamicAd({ slotId, size = "medium", className = "" }: DynamicAdProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [ads, setAds] = useState<any[]>([]);
-  const [simIndex, setSimIndex] = useState(0);
-  const [adInitialized, setAdInitialized] = useState(false);
-
-  const isDev = process.env.NODE_ENV === "development";
-  const height = size === "large" ? 250 : size === "small" ? 60 : 120;
-
-  // 🔹 Fetch Firestore ads in dev mode or if no AdSense slot provided
   useEffect(() => {
-    if (slotId && !isDev) return;
-
-    const fetchAds = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "ads"));
-        const fetchedAds = querySnapshot.docs.map((doc) => doc.data());
-        setAds(fetchedAds.length ? fetchedAds : []);
-      } catch (err) {
-        console.warn("Error fetching ads:", err);
+    async function loadRandomAd() {
+      const ads = await fetchAds();
+      if (ads.length > 0) {
+        const random = ads[Math.floor(Math.random() * ads.length)];
+        setAd(random);
       }
-    };
-
-    fetchAds();
-  }, [slotId, isDev]);
-
-  // 🔹 Rotate Firestore ads
-  useEffect(() => {
-    if ((slotId && !isDev) || ads.length === 0) return;
-    const t = setInterval(() => setSimIndex((s) => (s + 1) % ads.length), 5000);
-    return () => clearInterval(t);
-  }, [ads, slotId, isDev]);
-
-  // 🔹 Initialize AdSense only in production
-  useEffect(() => {
-    if (isDev || !slotId || adInitialized) return;
-
-    const initializeAdSense = () => {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        setAdInitialized(true);
-      } catch (err) {
-        console.warn("AdSense initialization error:", err);
-      }
-    };
-
-    if (typeof window === "undefined") return;
-
-    if (window.adsbygoogle) {
-      initializeAdSense();
-    } else {
-      const script = document.createElement("script");
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${PUBLISHER_ID}`;
-      script.async = true;
-      script.crossOrigin = "anonymous";
-
-      script.onload = () => {
-        setTimeout(initializeAdSense, 100);
-      };
-
-      script.onerror = () => {
-        console.warn("AdSense script failed to load");
-      };
-
-      document.head.appendChild(script);
     }
-  }, [slotId, adInitialized, isDev]);
+    loadRandomAd();
+  }, []);
 
-  // 🔹 Render Google ad only in production
-  if (slotId && !isDev) {
-    return (
-      <div ref={containerRef} className={`w-full ${className}`} aria-hidden>
-        <ins
-          className="adsbygoogle block"
-          style={{ display: "block", width: "100%", minHeight: height }}
-          data-ad-client={PUBLISHER_ID}
-          data-ad-slot={slotId}
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </div>
-    );
-  }
-
-  // 🔹 Render Firestore fallback ad
-  const ad = ads[simIndex] || {
-    title: "Cloud-Speicherlösungen",
-    description: "Sichern Sie Ihre Unternehmensdaten.",
-    imageUrl: "https://images.pexels.com/photos/1181676/pexels-photo-1181676.jpeg",
-    link: "#",
-  };
+  if (!ad) return null;
 
   return (
-    <div
-      ref={containerRef}
-      className={`w-full ${className}`}
-      style={{ minHeight: height }}
-      role="region"
-      aria-label="Gesponserte Anzeige"
+    <a
+      href={ad.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`block border rounded-xl shadow p-3 text-center transition hover:shadow-lg ${
+        size === "large" ? "w-full" : "max-w-sm"
+      } ${className}`} // 👈 merge custom className
     >
-      <a href={ad.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-        <div className="w-full flex items-center p-3 border border-gray-200 rounded-lg shadow-sm bg-white">
-          {ad.imageUrl && (
-            <img
-              src={`${ad.imageUrl}?v=${Date.now()}`}
-              alt={ad.title}
-              className="w-20 h-20 object-cover mr-3 rounded"
-              loading="lazy"
-            />
-          )}
-          <div className="flex-1 text-left">
-            <div className="text-sm font-medium text-gray-900">{ad.title}</div>
-            {ad.description && <div className="text-xs text-gray-600">{ad.description}</div>}
-          </div>
-          <div className="text-xs text-gray-400 ml-3">Gesponsert</div>
-        </div>
-      </a>
-    </div>
+      {ad.imageUrl && (
+        <img
+          src={ad.imageUrl}
+          alt={ad.title}
+          className="mx-auto mb-2 rounded-lg object-cover"
+        />
+      )}
+      <h3 className="text-base font-semibold">{ad.title}</h3>
+      <p className="text-gray-600 text-sm">{ad.description}</p>
+    </a>
   );
 }
