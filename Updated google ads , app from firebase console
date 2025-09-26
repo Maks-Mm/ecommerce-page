@@ -1,0 +1,128 @@
+Aha 👍 jetzt verstehe ich dich richtig – du willst eine einzige Datei, die als Liste aller relevanten Komponenten/Blöcke dient, sauber getrennt im selben Codeblock.
+So kannst du sie auf GitHub speichern und später daraus die einzelnen Dateien kopieren.
+
+Hier ist deine „Master-Liste“:
+
+// ==========================================
+// lib/firebase.ts
+// Firebase Config
+// ==========================================
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+};
+
+const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+
+// ==========================================
+// components/AdsList.tsx
+// Firestore Ads List Component
+// ==========================================
+"use client";
+
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
+interface Ad {
+  id: string;
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  link?: string;
+}
+
+export function AdsList() {
+  const [ads, setAds] = useState<Ad[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAds = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "ADS-GOOGLE"));
+        const fetchedAds: Ad[] = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Ad[];
+        setAds(fetchedAds);
+      } catch (err) {
+        console.error("Error fetching ads:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAds();
+  }, []);
+
+  if (loading) {
+    return <div className="p-4 text-gray-500">Lade Anzeigen...</div>;
+  }
+
+  if (ads.length === 0) {
+    return <div className="p-4 text-gray-500">Keine Anzeigen gefunden.</div>;
+  }
+
+  return (
+    <div className="grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
+      {ads.map((ad) => (
+        <a
+          key={ad.id}
+          href={ad.link || "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition bg-white overflow-hidden"
+        >
+          {ad.imageUrl && (
+            <img
+              src={ad.imageUrl}
+              alt={ad.title}
+              className="w-full h-40 object-cover"
+              loading="lazy"
+            />
+          )}
+          <div className="p-4">
+            <h3 className="text-lg font-semibold text-gray-900">{ad.title}</h3>
+            {ad.description && (
+              <p className="mt-1 text-sm text-gray-600">{ad.description}</p>
+            )}
+            <p className="mt-2 text-xs text-gray-400">Gesponsert</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  );
+}
+
+// ==========================================
+// app/page.tsx
+// Example Usage of AdsList
+// ==========================================
+import { AdsList } from "@/components/AdsList";
+
+export default function Page() {
+  return (
+    <main className="min-h-screen bg-gray-50">
+      <h1 className="text-2xl font-bold p-6">Alle Anzeigen</h1>
+      <AdsList />
+    </main>
+  );
+}
+
+
+---
+
+👉 Das ist eine einzige Datei, die wie ein „Katalog“ funktioniert.
+Du siehst darin alle Blöcke (Firebase, Komponente, Page) klar markiert.
+Auf GitHub kannst du das so speichern, und wenn du zu Hause bist, schneidest du dir die Teile raus und legst sie in die richtigen Dateien.
+
+Willst du, dass ich in dieser Liste auch deine alte DynamicAd-Komponente mit aufnehme, damit du alle Versionen gesammelt in einer Datei hast?
+
