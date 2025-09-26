@@ -126,3 +126,28 @@ Auf GitHub kannst du das so speichern, und wenn du zu Hause bist, schneidest du 
 
 Willst du, dass ich in dieser Liste auch deine alte DynamicAd-Komponente mit aufnehme, damit du alle Versionen gesammelt in einer Datei hast?
 
+new fix to getting the dates from firebase ,kes objects :// lib/fetchAds.ts
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase";
+
+export interface Ad {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl?: string;
+  link: string;
+}
+
+export async function fetchAds(): Promise<Ad[]> {
+  const querySnapshot = await getDocs(collection(db, "ADS-GOOGLE")); // 👈 your collection name
+  return querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      title: data.title,
+      description: data.description,
+      imageUrl: data.imageUrl || data.imageURL, // 👈 handle both cases
+      link: data.link,
+    };
+  });
+}
