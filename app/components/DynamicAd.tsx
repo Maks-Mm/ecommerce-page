@@ -10,6 +10,7 @@ interface DynamicAdProps {
   className?: string;
 }
 
+// Make sure this export statement is present and correct
 export function DynamicAd({ size = "medium", className = "" }: DynamicAdProps) {
   const [ads, setAds] = useState<Ad[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +32,7 @@ export function DynamicAd({ size = "medium", className = "" }: DynamicAdProps) {
   if (!ads.length) return null;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 p-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 p-4" style={{ backgroundColor: '#eff6ff' }}>
       {ads.slice(0, 5).map((ad) => (
         <a
           key={ad.id}
@@ -58,3 +59,6 @@ export function DynamicAd({ size = "medium", className = "" }: DynamicAdProps) {
     </div>
   );
 }
+
+// Alternative: If the above doesn't work, try adding a default export
+// export default DynamicAd;

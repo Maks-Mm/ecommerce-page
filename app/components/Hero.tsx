@@ -7,7 +7,7 @@ import { GiConfirmed } from 'react-icons/gi';
 import { useState } from 'react';
 import TimeLabelButtons from './TimeLabelButtons';
 import { FaTrash, FaTasks, FaStar } from 'react-icons/fa';
-import { AdsList } from './AdsList';
+//import { AdsList } from './AdsList';
 
 interface HeroProps { }
 
@@ -356,16 +356,12 @@ const Hero: React.FC<HeroProps> = () => {
         <p className="mt-2 text-gray-600 max-w-2xl mx-auto">Hier finden Sie die neuesten Beiträge rund um das wichtige Thema Reputationsmanagement</p>
       </div>
 
-      <section className="relative w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-20 px-6 text-center text-white">
-        <h1 className="text-4xl font-bold mb-4">Willkommen bei meiner Plattform</h1>
-        <p className="text-lg mb-8">Finde die besten Angebote, ausgewählt nur für dich.</p>
-
-        {/* Firestore Ad als Fallback, AdSense wenn slotId gesetzt */}
-        <DynamicAd size="medium" className="mx-auto max-w-lg" />
-
-        {/* Optional: Liste aller Ads unterhalb */}
-       {/* <AdsList /> */}
-      </section>
+      <section className="relative w-full bg-blue-50 py-20 px-6 text-center">
+  <h1 className="text-4xl font-bold mb-4 text-gray-800">Willkommen bei meiner Plattform</h1>
+  <p className="text-lg mb-8 text-gray-600">Finde die besten Angebote, ausgewählt nur für dich.</p>
+  
+  <DynamicAd size="medium" className="mx-auto max-w-lg" />
+</section>
 
 
 
