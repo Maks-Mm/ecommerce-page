@@ -1,4 +1,5 @@
-// lib/firebase.ts// lib/firebase.ts
+// lib/firebase.ts
+// ==========================================
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
@@ -15,7 +16,6 @@ const firebaseConfig = {
   measurementId: "G-0X4LY3SMBK"
 };
 
-// Initialize Firebase app
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
 } else {

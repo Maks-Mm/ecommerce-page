@@ -1,15 +1,13 @@
 // app/components/Hero.tsx
-
-
 "use client";
 
 import React, { JSX } from 'react';
-import DynamicAd from './DynamicAd';
+import { DynamicAd } from './DynamicAd';
 import { GiConfirmed } from 'react-icons/gi';
 import { useState } from 'react';
 import TimeLabelButtons from './TimeLabelButtons';
 import { FaTrash, FaTasks, FaStar } from 'react-icons/fa';
-import AdsList from './AdsList';
+import { AdsList } from './AdsList';
 
 interface HeroProps { }
 
@@ -366,7 +364,7 @@ const Hero: React.FC<HeroProps> = () => {
         <DynamicAd size="medium" className="mx-auto max-w-lg" />
 
         {/* Optional: Liste aller Ads unterhalb */}
-        <AdsList />
+       {/* <AdsList /> */}
       </section>
 
 
