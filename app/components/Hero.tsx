@@ -236,7 +236,7 @@ const Hero: React.FC<HeroProps> = () => {
             {
               id: 1,
               text: "Es stehen nachteilige Bewertungen über Sie oder Ihr Unternehmen im Internet.",
-              img: "https://as2.ftcdn.net/v2/jpg/05/59/64/33/1000_F_559643360_oqEqtrmAv2bycK4byljdViiy6WGUZ7hN.jpg",
+              img: "1000_F_559643360_oqEqtrmAv2bycK4byljdViiy6WGUZ7hN-removebg-preview.png",
             },
             {
               id: 2,
@@ -246,12 +246,12 @@ const Hero: React.FC<HeroProps> = () => {
             {
               id: 3,
               text: "Ihre Kunden gehen zur Konkurrenz und wahrscheinlich müssen Sie Umsatzeinbußen akzeptieren.",
-              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQghy77IlblGqNJD2YGYyss4-4Nfr3S3vKzJmIXATgPoWlslB16J9rE3FfRpzdMmUr3mY4&usqp=CAU",
+              img: "images-removebg-preview.png",
             },
             {
               id: 4,
               text: "Ihnen fehlt die Zeit und die Ressourcen, um Ihre Online-Reputation aktiv zu verwalten.",
-              img: "https://www.shutterstock.com/image-vector/closed-stamp-text-letters-concept-260nw-2110895720.jpg",
+              img: "closed-stamp-text-letters-concept-260nw-2110895720-removebg-preview.png",
             },
           ].map((card) => (
             <div
@@ -357,11 +357,11 @@ const Hero: React.FC<HeroProps> = () => {
       </div>
 
       <section className="relative w-full bg-blue-50 py-20 px-6 text-center">
-  <h1 className="text-4xl font-bold mb-4 text-gray-800">Willkommen bei meiner Plattform</h1>
-  <p className="text-lg mb-8 text-gray-600">Finde die besten Angebote, ausgewählt nur für dich.</p>
-  
-  <DynamicAd size="medium" className="mx-auto max-w-lg" />
-</section>
+
+        <DynamicAd size="medium" className="mx-auto max-w-lg" />
+
+
+      </section>
 
 
 
