@@ -1,9 +1,19 @@
 // app/components/ClientHelper.tsx
 "use client";
 
-import * as React from "react"; 
+import * as React from "react";
 import { useState } from "react";
-import { SiGooglemessages, SiWhatsapp, SiInstagram } from "react-icons/si";
+import { SiGooglemessages, SiInstagram } from "react-icons/si";
+import {
+} from "react-icons/si";
+import {
+  FaRegHandshake,
+  FaRegCalendarAlt,
+  FaBoxOpen,
+  FaCreditCard,
+  FaMapMarkerAlt,
+  FaStar
+} from "react-icons/fa";
 
 const optionContents = {
   Hilfe: (
@@ -30,7 +40,32 @@ const optionContents = {
       <p>Folgen Sie uns auf Instagram für aktuelle News und Tipps!</p>
     </div>
   ),
+  Bestellung: (
+    <div>
+      <h2 className="text-xl font-bold mb-2">Bestellung</h2>
+      <p>Fragen zu Lieferung, Versand oder Rückgabe? Hier finden Sie Hilfe.</p>
+    </div>
+  ),
+  Zahlung: (
+    <div>
+      <h2 className="text-xl font-bold mb-2">Zahlung</h2>
+      <p>Informationen zu Rechnungen und Zahlungsmethoden.</p>
+    </div>
+  ),
+  Standorte: (
+    <div>
+      <h2 className="text-xl font-bold mb-2">Standorte</h2>
+      <p>Besuchen Sie uns in einer unserer Filialen oder finden Sie den nächstgelegenen Standort.</p>
+    </div>
+  ),
+  Feedback: (
+    <div>
+      <h2 className="text-xl font-bold mb-2">Feedback</h2>
+      <p>Teilen Sie uns Ihre Meinung mit – wir freuen uns über Ihr Feedback!</p>
+    </div>
+  ),
 } as const;
+
 
 type OptionKey = keyof typeof optionContents;
 
@@ -45,11 +80,14 @@ export default function ClientHelper() {
 
   const options: Option[] = [
     { name: "Hilfe", icon: <SiGooglemessages /> },
-    { name: "Beratung", icon: <SiWhatsapp /> },
-    { name: "Termin", icon: <SiWhatsapp /> },
+    { name: "Beratung", icon: <FaRegHandshake /> },
+    { name: "Termin", icon: <FaRegCalendarAlt /> },
     { name: "Soziale Medien", icon: <SiInstagram /> },
+    { name: "Bestellung", icon: <FaBoxOpen /> },
+    { name: "Zahlung", icon: <FaCreditCard /> },
+    { name: "Standorte", icon: <FaMapMarkerAlt /> },
+    { name: "Feedback", icon: <FaStar /> },
   ];
-
   return (
     <div className="fixed bottom-5 right-5 z-50">
       {/* Subpage Modal */}
