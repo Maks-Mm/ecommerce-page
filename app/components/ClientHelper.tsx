@@ -1,19 +1,23 @@
-// app/components/ClientHelper.tsx
 "use client";
 
-import * as React from "react";
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SiGooglemessages, SiInstagram } from "react-icons/si";
-import {
-} from "react-icons/si";
 import {
   FaRegHandshake,
   FaRegCalendarAlt,
   FaBoxOpen,
   FaCreditCard,
   FaMapMarkerAlt,
-  FaStar
+  FaStar,
 } from "react-icons/fa";
+import PayPalButton from "./PayPalButton";
+
+// Declare a minimal type for the PayPal SDK on window (keeps TS happy).
+declare global {
+  interface Window {
+    paypal?: any;
+  }
+}
 
 const optionContents = {
   Hilfe: (
@@ -49,7 +53,7 @@ const optionContents = {
   Zahlung: (
     <div>
       <h2 className="text-xl font-bold mb-2">Zahlung</h2>
-      <p>Informationen zu Rechnungen und Zahlungsmethoden.</p>
+      <p>Bezahlen Sie einfach und sicher mit PayPal.</p>
     </div>
   ),
   Standorte: (
@@ -66,13 +70,89 @@ const optionContents = {
   ),
 } as const;
 
-
 type OptionKey = keyof typeof optionContents;
+type Option = { name: OptionKey; icon: React.ReactNode };
 
-type Option = {
-  name: OptionKey;
-  icon: React.ReactNode;
-};
+// PaymentPanel handles loading the PayPal SDK and rendering the button into a ref.
+function PaymentPanel({ amount = "10.00" }: { amount?: string }) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const SCRIPT_ID = "paypal-sdk";
+
+    const loadScript = (): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        if (document.getElementById(SCRIPT_ID)) {
+          return resolve();
+        }
+
+        const script = document.createElement("script");
+        script.id = SCRIPT_ID;
+        script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=EUR`;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("PayPal SDK failed to load"));
+        document.body.appendChild(script);
+      });
+    };
+
+    const initPayPal = async () => {
+      try {
+        await loadScript();
+
+        // Poll until window.paypal is available (max 10 tries)
+        let retries = 0;
+        while (!window.paypal && retries < 10) {
+          await new Promise((r) => setTimeout(r, 200));
+          retries++;
+        }
+
+        if (!mounted || !window.paypal) {
+          console.error("PayPal SDK not available after load");
+          return;
+        }
+
+        if (containerRef.current) {
+          containerRef.current.innerHTML = "";
+          window.paypal
+            .Buttons({
+              createOrder: (data: any, actions: any) =>
+                actions.order.create({
+                  purchase_units: [{ amount: { value: amount } }],
+                }),
+              onApprove: async (data: any, actions: any) => {
+                const details = await actions.order.capture();
+                alert(`Zahlung abgeschlossen von ${details?.payer?.name?.given_name ?? "Käufer"}`);
+              },
+              onError: (err: any) => {
+                console.error(err);
+                alert("Ein Fehler ist bei der Zahlung aufgetreten.");
+              },
+            })
+            .render(containerRef.current);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    initPayPal();
+
+    return () => {
+      mounted = false;
+      if (containerRef.current) containerRef.current.innerHTML = "";
+    };
+  }, [amount]);
+
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-2">Zahlung</h2>
+      <p>Bezahlen Sie einfach und sicher mit PayPal.</p>
+      <div ref={containerRef} id="paypal-button-container" className="mt-4" />
+    </div>
+  );
+}
 
 export default function ClientHelper() {
   const [open, setOpen] = useState(false);
@@ -88,9 +168,9 @@ export default function ClientHelper() {
     { name: "Standorte", icon: <FaMapMarkerAlt /> },
     { name: "Feedback", icon: <FaStar /> },
   ];
+
   return (
     <div className="fixed bottom-5 right-5 z-50">
-      {/* Subpage Modal */}
       {selected && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full relative">
@@ -101,12 +181,11 @@ export default function ClientHelper() {
             >
               ×
             </button>
-            {optionContents[selected]}
+            {selected === "Zahlung" ? <PaymentPanel amount="10.00" /> : optionContents[selected]}
           </div>
         </div>
       )}
 
-      {/* Expandable Options */}
       {open && !selected && (
         <div className="flex flex-col mb-2 space-y-2 bg-white shadow-lg rounded-xl p-3">
           {options.map((option) => (
@@ -122,10 +201,10 @@ export default function ClientHelper() {
         </div>
       )}
 
-      {/* Main Button */}
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpen((s) => !s)}
         className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg hover:bg-green-600 transition text-2xl"
+        aria-label="Hilfsmenü"
       >
         {open ? "×" : <SiGooglemessages />}
       </button>
