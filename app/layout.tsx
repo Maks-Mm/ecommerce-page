@@ -2,26 +2,17 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import { FooterR254 } from "./components/Footer";
-import Script from "next/script";
+import PayPalScript from "./components/PayPalScript";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const isProduction = process.env.NODE_ENV === "production";
-
   return (
     <html lang="en">
       <head>
-        {/* Google AdSense Script */}
-        {isProduction && (
-          <Script
-            id="adsbygoogle-init"
-            strategy="afterInteractive"
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5404208486949480"
-            crossOrigin="anonymous"
-          />
-        )}
+        {/* Hier keine Event-Handler mehr */}
       </head>
       <body className="min-h-screen flex flex-col">
         <Navbar />
+        <PayPalScript />
         <main className="flex-grow">{children}</main>
         <FooterR254 />
       </body>
