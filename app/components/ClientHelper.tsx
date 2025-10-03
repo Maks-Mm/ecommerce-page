@@ -123,34 +123,32 @@ import {
     </div>
   ),
   
-      Beratung: (
-    <div className="space-y-4">
+     Beratung: (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Persönliche Beratung</h2>
       
-      <div className="bg-blue-50 p-4 rounded-lg">
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
         <h3 className="font-semibold text-lg mb-3">Kostenlose Erstberatung</h3>
-        <p className="text-gray-700 mb-4">
-          Lassen Sie sich von unseren Experten unverbindlich beraten. Wir finden gemeinsam die beste Lösung für Ihre Bedürfnisse.
+        <p className="text-gray-700 mb-4 text-sm">
+          Lassen Sie sich von unseren Experten unverbindlich beraten.
         </p>
         
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span>Individuelle Lösungsvorschläge</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span>Detaillierte Produktvorstellungen</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span>Persönliche Betreuung</span>
-          </div>
+        <div className="space-y-2 text-sm">
+          {[
+            "Individuelle Lösungsvorschläge",
+            "Detaillierte Produktvorstellungen", 
+            "Persönliche Betreuung"
+          ].map((feature, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span>{feature}</span>
+            </div>
+          ))}
         </div>
       </div>
 
       <button className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold">
-        Jetzt Beratungstermin vereinbaren
+        Termin vereinbaren
       </button>
     </div>
   ),
@@ -160,58 +158,55 @@ import {
         <p>Buchen Sie einen Termin für ein persönliches Gespräch oder eine Online-Beratung.</p>
       </div>
     ),
-    "Soziale Medien": (
-    <div className="space-y-4">
+     "Soziale Medien": (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Folgen Sie uns</h2>
       
-      <div className="grid grid-cols-1 gap-4">
-        <a href="#" className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all">
-          <SiInstagram className="text-2xl" />
-          <div>
-            <div className="font-semibold">Instagram</div>
-            <div className="text-sm opacity-90">Aktuelle News & Stories</div>
-          </div>
-        </a>
-        
-        <a href="#" className="flex items-center gap-3 p-4 bg-blue-600 text-white rounded-lg hover:shadow-lg transition-all">
-          <SiGooglemessages className="text-2xl" />
-          <div>
-            <div className="font-semibold">Facebook</div>
-            <div className="text-sm opacity-90">Community & Events</div>
-          </div>
-        </a>
-        
-        <a href="#" className="flex items-center gap-3 p-4 bg-gray-800 text-white rounded-lg hover:shadow-lg transition-all">
-          <div className="text-2xl">𝕏</div>
-          <div>
-            <div className="font-semibold">Twitter/X</div>
-            <div className="text-sm opacity-90">Updates & Support</div>
-          </div>
-        </a>
+      <div className="grid grid-cols-1 gap-3">
+        {[
+          { platform: "Instagram", icon: <SiInstagram />, color: "from-purple-500 to-pink-500", text: "News & Stories" },
+          { platform: "Facebook", icon: <SiGooglemessages />, color: "bg-blue-600", text: "Community & Events" },
+          { platform: "Twitter/X", icon: <div>𝕏</div>, color: "bg-gray-800", text: "Updates & Support" }
+        ].map((social, index) => (
+          <a 
+            key={index} 
+            href="#" 
+            className={`flex items-center gap-3 p-3 text-white rounded-lg hover:shadow-lg transition-all ${
+              social.color.includes('bg') ? social.color : `bg-gradient-to-r ${social.color}`
+            }`}
+          >
+            <span className="text-xl">{social.icon}</span>
+            <div className="flex-1">
+              <div className="font-semibold">{social.platform}</div>
+              <div className="text-sm opacity-90">{social.text}</div>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   ),
-   Bestellung: (
-    <div className="space-y-4">
+
+  Bestellung: (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Ihre Bestellung</h2>
       
       <div className="space-y-3">
         <div className="p-4 border border-gray-200 rounded-lg">
-          <h3 className="font-semibold mb-2">📦 Bestellstatus prüfen</h3>
+          <h3 className="font-semibold mb-2">📦 Bestellstatus</h3>
           <input 
             type="text" 
-            placeholder="Bestellnummer eingeben"
-            className="w-full p-2 border border-gray-300 rounded mb-2"
+            placeholder="Bestellnummer"
+            className="w-full p-2 border border-gray-300 rounded mb-2 text-sm"
           />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          <button className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm">
             Status abfragen
           </button>
         </div>
         
         <div className="p-4 border border-gray-200 rounded-lg">
-          <h3 className="font-semibold mb-2">🔄 Retoure anmelden</h3>
-          <p className="text-sm text-gray-600 mb-2">Einfache Rückgabe innerhalb von 30 Tagen</p>
-          <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+          <h3 className="font-semibold mb-2">🔄 Retoure</h3>
+          <p className="text-sm text-gray-600 mb-2">Einfache Rückgabe in 30 Tagen</p>
+          <button className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 text-sm">
             Retoure starten
           </button>
         </div>
@@ -297,44 +292,46 @@ import {
 ];
 
     return (
-      <div className="fixed bottom-5 right-5 z-50">
-        {selected && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full relative">
-              <button
-                onClick={() => setSelected(null)}
-                className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl"
-                aria-label="Schließen"
-              >
-                ×
-              </button>
+    <div className="fixed bottom-5 right-5 z-50">
+      {selected && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full max-h-[85vh] flex flex-col">
+            <button
+              onClick={() => setSelected(null)}
+              className="self-end text-gray-400 hover:text-gray-700 text-2xl mb-2"
+              aria-label="Schließen"
+            >
+              ×
+            </button>
+            <div className="overflow-y-auto flex-1">
               {selected === "Zahlung" ? <PaymentPanel amount="10.00" /> : optionContents[selected]}
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {open && !selected && (
-          <div className="flex flex-col mb-2 space-y-2 bg-white shadow-lg rounded-xl p-3">
-            {options.map((option) => (
-              <button
-                key={option.name}
-                onClick={() => setSelected(option.name)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-              >
-                {option.icon}
-                {option.name}
-              </button>
-            ))}
-          </div>
-        )}
+      {open && !selected && (
+        <div className="flex flex-col mb-2 space-y-2 bg-white shadow-lg rounded-xl p-3 max-h-[70vh] overflow-y-auto">
+          {options.map((option) => (
+            <button
+              key={option.name}
+              onClick={() => setSelected(option.name)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm"
+            >
+              {option.icon}
+              {option.name}
+            </button>
+          ))}
+        </div>
+      )}
 
-        <button
-          onClick={() => setOpen((s) => !s)}
-          className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg hover:bg-green-600 transition text-2xl"
-          aria-label="Hilfsmenü"
-        >
-          {open ? "×" : <SiGooglemessages />}
-        </button>
-      </div>
-    );
-  }
+      <button
+        onClick={() => setOpen((s) => !s)}
+        className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg hover:bg-green-600 transition text-2xl"
+        aria-label="Hilfsmenü"
+      >
+        {open ? "×" : <SiGooglemessages />}
+      </button>
+    </div>
+  );
+}
