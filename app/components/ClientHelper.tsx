@@ -1,15 +1,21 @@
   "use client";
 
-  import React, { useEffect, useRef, useState } from "react";
-  import { SiGooglemessages, SiInstagram } from "react-icons/si";
-  import {
-    FaRegHandshake,
-    FaRegCalendarAlt,
-    FaBoxOpen,
-    FaCreditCard,
-    FaMapMarkerAlt,
-    FaStar,
-  } from "react-icons/fa";
+
+import React, { useEffect, useRef, useState } from "react";
+import { SiGooglemessages, SiInstagram, SiWhatsapp } from "react-icons/si";
+import {
+  FaRegHandshake,
+  FaRegCalendarAlt,
+  FaBoxOpen,
+  FaCreditCard,
+  FaMapMarkerAlt,
+  FaStar,
+  FaPhone,
+  FaEnvelope,
+  FaClock,
+  FaChevronDown,
+} from "react-icons/fa";
+
   import PayPalButton from "./PayPalButton";
 
   // Declare a minimal type for the PayPal SDK on window (keeps TS happy).
@@ -20,18 +26,134 @@
   }
 
   const optionContents = {
-    Hilfe: (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Hilfe</h2>
-        <p>Hier können Sie Hilfe zu unseren Services erhalten. Schreiben Sie uns direkt im Chat!</p>
+     Hilfe: (
+    <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+      <h2 className="text-2xl font-bold mb-4 text-blue-600">Hilfe & Support</h2>
+      
+      {/* Emergency Contact */}
+      <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
+        <h3 className="font-semibold text-lg mb-2 text-red-700">🚨 Dringende Hilfe</h3>
+        <p className="text-red-600 text-sm mb-3">Bei akuten Problemen sofort Kontakt:</p>
+        <div className="flex gap-2">
+          <a href="tel:+49123456789" className="flex-1 bg-red-500 text-white text-center py-2 rounded hover:bg-red-600 transition-colors text-sm">
+            Anrufen
+          </a>
+          <a href="https://wa.me/49123456789" className="flex-1 bg-green-500 text-white text-center py-2 rounded hover:bg-green-600 transition-colors text-sm">
+            WhatsApp
+          </a>
+        </div>
       </div>
-    ),
-    Beratung: (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Beratung</h2>
-        <p>Vereinbaren Sie eine Beratung mit unserem Team. Wir helfen Ihnen gerne weiter!</p>
+
+      {/* Contact Options */}
+      <div className="space-y-3">
+        <h3 className="font-semibold text-lg mb-2">Kontaktwege</h3>
+        
+        <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <FaPhone className="text-blue-500 text-xl" />
+          <div className="flex-1">
+            <div className="font-medium">Telefon</div>
+            <div className="text-sm text-gray-600">Mo-Fr 9:00-18:00</div>
+          </div>
+          <a href="tel:+49123456789" className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+            Anruf
+          </a>
+        </div>
+
+        <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+          <SiWhatsapp className="text-green-500 text-xl" />
+          <div className="flex-1">
+            <div className="font-medium">WhatsApp</div>
+            <div className="text-sm text-gray-600">Schnelle Antwort</div>
+          </div>
+          <a href="https://wa.me/49123456789" className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
+            Chat
+          </a>
+        </div>
+
+        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <FaEnvelope className="text-gray-600 text-xl" />
+          <div className="flex-1">
+            <div className="font-medium">E-Mail</div>
+            <div className="text-sm text-gray-600">Antwort in 24h</div>
+          </div>
+          <a href="mailto:support@ihrefirma.de" className="bg-gray-500 text-white px-3 py-1 rounded text-sm hover:bg-gray-600">
+            Mail
+          </a>
+        </div>
       </div>
-    ),
+
+      {/* Live Chat */}
+      <div className="bg-purple-50 border border-purple-200 p-4 rounded-lg">
+        <div className="flex items-center gap-3 mb-3">
+          <FaClock className="text-purple-500 text-xl" />
+          <div>
+            <h3 className="font-semibold">Live Chat</h3>
+            <p className="text-sm text-gray-600">Jetzt verfügbar</p>
+          </div>
+        </div>
+        <button className="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600 transition-colors font-medium">
+          Chat starten
+        </button>
+      </div>
+
+      {/* FAQ Section - Collapsible */}
+      <div className="border border-gray-200 rounded-lg">
+        <details className="group">
+          <summary className="flex items-center justify-between p-4 cursor-pointer list-none">
+            <span className="font-semibold">Häufige Fragen</span>
+            <FaChevronDown className="text-gray-500 group-open:rotate-180 transition-transform" />
+          </summary>
+          <div className="px-4 pb-4 space-y-2">
+            {[
+              "Wie verfolge ich meine Bestellung?",
+              "Was sind die Lieferzeiten?",
+              "Kann ich meine Bestellung ändern?",
+              "Wie läuft die Rückgabe ab?"
+            ].map((question, index) => (
+              <button
+                key={index}
+                className="w-full text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+        </details>
+      </div>
+    </div>
+  ),
+  
+      Beratung: (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold mb-4">Persönliche Beratung</h2>
+      
+      <div className="bg-blue-50 p-4 rounded-lg">
+        <h3 className="font-semibold text-lg mb-3">Kostenlose Erstberatung</h3>
+        <p className="text-gray-700 mb-4">
+          Lassen Sie sich von unseren Experten unverbindlich beraten. Wir finden gemeinsam die beste Lösung für Ihre Bedürfnisse.
+        </p>
+        
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span>Individuelle Lösungsvorschläge</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span>Detaillierte Produktvorstellungen</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span>Persönliche Betreuung</span>
+          </div>
+        </div>
+      </div>
+
+      <button className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold">
+        Jetzt Beratungstermin vereinbaren
+      </button>
+    </div>
+  ),
     Termin: (
       <div>
         <h2 className="text-xl font-bold mb-2">Termin</h2>
@@ -39,17 +161,63 @@
       </div>
     ),
     "Soziale Medien": (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Soziale Medien</h2>
-        <p>Folgen Sie uns auf Instagram für aktuelle News und Tipps!</p>
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold mb-4">Folgen Sie uns</h2>
+      
+      <div className="grid grid-cols-1 gap-4">
+        <a href="#" className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all">
+          <SiInstagram className="text-2xl" />
+          <div>
+            <div className="font-semibold">Instagram</div>
+            <div className="text-sm opacity-90">Aktuelle News & Stories</div>
+          </div>
+        </a>
+        
+        <a href="#" className="flex items-center gap-3 p-4 bg-blue-600 text-white rounded-lg hover:shadow-lg transition-all">
+          <SiGooglemessages className="text-2xl" />
+          <div>
+            <div className="font-semibold">Facebook</div>
+            <div className="text-sm opacity-90">Community & Events</div>
+          </div>
+        </a>
+        
+        <a href="#" className="flex items-center gap-3 p-4 bg-gray-800 text-white rounded-lg hover:shadow-lg transition-all">
+          <div className="text-2xl">𝕏</div>
+          <div>
+            <div className="font-semibold">Twitter/X</div>
+            <div className="text-sm opacity-90">Updates & Support</div>
+          </div>
+        </a>
       </div>
-    ),
-    Bestellung: (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Bestellung</h2>
-        <p>Fragen zu Lieferung, Versand oder Rückgabe? Hier finden Sie Hilfe.</p>
+    </div>
+  ),
+   Bestellung: (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold mb-4">Ihre Bestellung</h2>
+      
+      <div className="space-y-3">
+        <div className="p-4 border border-gray-200 rounded-lg">
+          <h3 className="font-semibold mb-2">📦 Bestellstatus prüfen</h3>
+          <input 
+            type="text" 
+            placeholder="Bestellnummer eingeben"
+            className="w-full p-2 border border-gray-300 rounded mb-2"
+          />
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Status abfragen
+          </button>
+        </div>
+        
+        <div className="p-4 border border-gray-200 rounded-lg">
+          <h3 className="font-semibold mb-2">🔄 Retoure anmelden</h3>
+          <p className="text-sm text-gray-600 mb-2">Einfache Rückgabe innerhalb von 30 Tagen</p>
+          <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Retoure starten
+          </button>
+        </div>
       </div>
-    ),
+    </div>
+  ),
     Zahlung: (
       <div>
         <h2 className="text-xl font-bold mb-2">Zahlung</h2>
@@ -118,15 +286,15 @@
     const [selected, setSelected] = useState<OptionKey | null>(null);
 
     const options: Option[] = [
-      { name: "Hilfe", icon: <SiGooglemessages /> },
-      { name: "Beratung", icon: <FaRegHandshake /> },
-      { name: "Termin", icon: <FaRegCalendarAlt /> },
-      { name: "Soziale Medien", icon: <SiInstagram /> },
-      { name: "Bestellung", icon: <FaBoxOpen /> },
-      { name: "Zahlung", icon: <FaCreditCard /> },
-      { name: "Standorte", icon: <FaMapMarkerAlt /> },
-      { name: "Feedback", icon: <FaStar /> },
-    ];
+  { name: "Hilfe", icon: <SiGooglemessages /> },
+  { name: "Beratung", icon: <FaRegHandshake /> },
+  { name: "Termin", icon: <FaRegCalendarAlt /> },
+  { name: "Soziale Medien", icon: <SiInstagram /> },
+  { name: "Bestellung", icon: <FaBoxOpen /> },
+  { name: "Zahlung", icon: <FaCreditCard /> },
+  { name: "Standorte", icon: <FaMapMarkerAlt /> },
+  { name: "Feedback", icon: <FaStar /> },
+];
 
     return (
       <div className="fixed bottom-5 right-5 z-50">
