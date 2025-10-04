@@ -1,5 +1,4 @@
-  "use client";
-
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import { SiGooglemessages, SiInstagram, SiWhatsapp } from "react-icons/si";
@@ -16,17 +15,15 @@ import {
   FaChevronDown,
 } from "react-icons/fa";
 
-  import PayPalButton from "./PayPalButton";
-
-  // Declare a minimal type for the PayPal SDK on window (keeps TS happy).
-  declare global {
-    interface Window {
-      paypal?: any;
-    }
+// Declare a minimal type for the PayPal SDK on window (keeps TS happy).
+declare global {
+  interface Window {
+    paypal?: any;
   }
+}
 
-  const optionContents = {
-     Hilfe: (
+const optionContents = {
+  Hilfe: (
     <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
       <h2 className="text-2xl font-bold mb-4 text-blue-600">Hilfe & Support</h2>
       
@@ -123,7 +120,7 @@ import {
     </div>
   ),
   
-     Beratung: (
+  Beratung: (
     <div className="space-y-4 max-h-[60vh] overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Persönliche Beratung</h2>
       
@@ -152,13 +149,8 @@ import {
       </button>
     </div>
   ),
-    Termin: (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Termin</h2>
-        <p>Buchen Sie einen Termin für ein persönliches Gespräch oder eine Online-Beratung.</p>
-      </div>
-    ),
-     "Soziale Medien": (
+
+  "Soziale Medien": (
     <div className="space-y-4 max-h-[60vh] overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Folgen Sie uns</h2>
       
@@ -213,34 +205,216 @@ import {
       </div>
     </div>
   ),
-    Zahlung: (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Zahlung</h2>
-        <p>Bezahlen Sie einfach und sicher mit PayPal.</p>
-      </div>
-    ),
-    Standorte: (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Standorte</h2>
-        <p>Besuchen Sie uns in einer unserer Filialen oder finden Sie den nächstgelegenen Standort.</p>
-      </div>
-    ),
-    Feedback: (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Feedback</h2>
-        <p>Teilen Sie uns Ihre Meinung mit – wir freuen uns über Ihr Feedback!</p>
-      </div>
-    ),
-  } as const;
 
-  type OptionKey = keyof typeof optionContents;
-  type Option = { name: OptionKey; icon: React.ReactNode };
+  Zahlung: (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-4">Sichere Zahlung</h2>
+      
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <h3 className="font-semibold text-lg mb-3">💳 Verschiedene Zahlungsmethoden</h3>
+        <p className="text-gray-700 mb-4 text-sm">
+          Wählen Sie Ihre bevorzugte Zahlungsmethode für eine sichere und schnelle Abwicklung.
+        </p>
+        
+        <div className="space-y-2 text-sm">
+          {[
+            "PayPal - Schnell und sicher",
+            "Kreditkarte - Visa, Mastercard", 
+            "Überweisung - Klassisch und sicher"
+          ].map((feature, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span>{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-  // PaymentPanel handles loading the PayPal SDK and rendering the button into a ref.
-  function PaymentPanel({ amount = "10.00" }: { amount?: string }) {
-    const containerRef = useRef<HTMLDivElement | null>(null);
+      <div className="p-4 border border-gray-200 rounded-lg">
+        <h3 className="font-semibold mb-2">💰 Jetzt bezahlen mit PayPal</h3>
+        <p className="text-sm text-gray-600 mb-3">Sichere Zahlung in wenigen Klicks</p>
+        <div id="paypal-button-container" className="mt-2" />
+      </div>
+    </div>
+  ),
 
-    useEffect(() => {
+  // JETZT ENTWICKELTE OPTIONEN - mit gleichen Stilen wie existierende
+  Termin: (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-4">Termin vereinbaren</h2>
+      
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <h3 className="font-semibold text-lg mb-3">📅 Persönliche Terminvereinbarung</h3>
+        <p className="text-gray-700 mb-4 text-sm">
+          Vereinbaren Sie bequem einen Termin für eine persönliche Beratung vor Ort oder online.
+        </p>
+        
+        <div className="space-y-2 text-sm">
+          {[
+            "Vor-Ort Beratung in unseren Filialen",
+            "Video-Call Termine verfügbar", 
+            "Flexible Zeiten nach Vereinbarung"
+          ].map((feature, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span>{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <div className="p-4 border border-gray-200 rounded-lg">
+          <h3 className="font-semibold mb-2">🗓️ Termin auswählen</h3>
+          <div className="space-y-2">
+            <select className="w-full p-2 border border-gray-300 rounded text-sm">
+              <option>Terminart auswählen</option>
+              <option>Vor-Ort Beratung</option>
+              <option>Video-Call</option>
+              <option>Telefonische Beratung</option>
+            </select>
+            <input 
+              type="datetime-local" 
+              className="w-full p-2 border border-gray-300 rounded text-sm"
+            />
+          </div>
+          <button className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition-colors font-medium mt-3">
+            Termin buchen
+          </button>
+        </div>
+      </div>
+    </div>
+  ),
+
+  Standorte: (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-4">Unsere Standorte</h2>
+      
+      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+        <h3 className="font-semibold text-lg mb-3">📍 Filialen in Ihrer Nähe</h3>
+        <p className="text-gray-700 mb-4 text-sm">
+          Besuchen Sie uns in einer unserer Filialen - wir beraten Sie gerne persönlich.
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        {[
+          {
+            name: "Berlin Mitte",
+            address: "Hauptstraße 123, 10115 Berlin",
+            hours: "Mo-Fr: 9:00-18:00, Sa: 10:00-14:00",
+            phone: "+49 30 12345678"
+          },
+          {
+            name: "Hamburg Zentrum", 
+            address: "Alsterarkaden 45, 20354 Hamburg",
+            hours: "Mo-Fr: 9:30-18:30, Sa: 10:00-16:00",
+            phone: "+49 40 87654321"
+          },
+          {
+            name: "München City",
+            address: "Marienplatz 8, 80331 München", 
+            hours: "Mo-Fr: 9:00-19:00, Sa: 10:00-15:00",
+            phone: "+49 89 13579246"
+          }
+        ].map((location, index) => (
+          <div key={index} className="p-4 border border-gray-200 rounded-lg">
+            <h3 className="font-semibold mb-2">{location.name}</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
+                <FaMapMarkerAlt className="text-red-500" />
+                <span>{location.address}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaClock className="text-blue-500" />
+                <span>{location.hours}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaPhone className="text-green-500" />
+                <span>{location.phone}</span>
+              </div>
+            </div>
+            <button className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-colors text-sm mt-3">
+              Route anzeigen
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+
+  Feedback: (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-4">Ihr Feedback</h2>
+      
+      <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+        <h3 className="font-semibold text-lg mb-3">💫 Teilen Sie uns Ihre Meinung mit</h3>
+        <p className="text-gray-700 mb-4 text-sm">
+          Wir sind stets bemüht, unseren Service zu verbessern und freuen uns über Ihr Feedback.
+        </p>
+        
+        <div className="space-y-2 text-sm">
+          {[
+            "Konstruktive Kritik hilft uns besser zu werden",
+            "Positive Rückmeldungen motivieren unser Team", 
+            "Anregungen für neue Features willkommen"
+          ].map((feature, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span>{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <div className="p-4 border border-gray-200 rounded-lg">
+          <h3 className="font-semibold mb-2">📝 Feedback-Formular</h3>
+          <div className="space-y-3">
+            <select className="w-full p-2 border border-gray-300 rounded text-sm">
+              <option>Feedback-Kategorie auswählen</option>
+              <option>Produktbewertung</option>
+              <option>Service-Bewertung</option>
+              <option>Verbesserungsvorschlag</option>
+              <option>Problemmeldung</option>
+            </select>
+            <input 
+              type="text" 
+              placeholder="Ihr Name (optional)"
+              className="w-full p-2 border border-gray-300 rounded text-sm"
+            />
+            <textarea 
+              placeholder="Ihr Feedback..."
+              rows={4}
+              className="w-full p-2 border border-gray-300 rounded text-sm"
+            />
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Bewertung:</span>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button key={star} className="text-yellow-400 hover:text-yellow-500">
+                  <FaStar />
+                </button>
+              ))}
+            </div>
+          </div>
+          <button className="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600 transition-colors font-medium mt-3">
+            Feedback absenden
+          </button>
+        </div>
+      </div>
+    </div>
+  ),
+} as const;
+
+// KORREKTE TYP-DEFINITION - Jetzt mit allen Optionen
+type OptionKey = keyof typeof optionContents;
+type Option = { name: OptionKey; icon: React.ReactNode };
+
+// PaymentPanel handles loading the PayPal SDK and rendering the button into a ref.
+function PaymentPanel({ amount = "10.00" }: { amount?: string }) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
     let retries = 0;
     const interval = setInterval(() => {
       if (window.paypal && containerRef.current) {
@@ -255,7 +429,7 @@ import {
           },
         }).render(containerRef.current);
 
-        clearInterval(interval); // stop polling
+        clearInterval(interval);
       } else if (retries > 20) {
         console.error("PayPal SDK not available after waiting");
         clearInterval(interval);
@@ -266,32 +440,31 @@ import {
     return () => clearInterval(interval);
   }, [amount]);
 
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-2">Zahlung</h2>
+      <p>Bezahlen Sie einfach und sicher mit PayPal.</p>
+      <div ref={containerRef} id="paypal-button-container" className="mt-4" />
+    </div>
+  );
+}
 
-    return (
-      <div>
-        <h2 className="text-xl font-bold mb-2">Zahlung</h2>
-        <p>Bezahlen Sie einfach und sicher mit PayPal.</p>
-        <div ref={containerRef} id="paypal-button-container" className="mt-4" />
-      </div>
-    );
-  }
+export default function ClientHelper() {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState<OptionKey | null>(null);
 
-  export default function ClientHelper() {
-    const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState<OptionKey | null>(null);
+  const options: Option[] = [
+    { name: "Hilfe", icon: <SiGooglemessages /> },
+    { name: "Beratung", icon: <FaRegHandshake /> },
+    { name: "Termin", icon: <FaRegCalendarAlt /> },
+    { name: "Soziale Medien", icon: <SiInstagram /> },
+    { name: "Bestellung", icon: <FaBoxOpen /> },
+    { name: "Zahlung", icon: <FaCreditCard /> },
+    { name: "Standorte", icon: <FaMapMarkerAlt /> },
+    { name: "Feedback", icon: <FaStar /> },
+  ];
 
-    const options: Option[] = [
-  { name: "Hilfe", icon: <SiGooglemessages /> },
-  { name: "Beratung", icon: <FaRegHandshake /> },
-  { name: "Termin", icon: <FaRegCalendarAlt /> },
-  { name: "Soziale Medien", icon: <SiInstagram /> },
-  { name: "Bestellung", icon: <FaBoxOpen /> },
-  { name: "Zahlung", icon: <FaCreditCard /> },
-  { name: "Standorte", icon: <FaMapMarkerAlt /> },
-  { name: "Feedback", icon: <FaStar /> },
-];
-
-    return (
+  return (
     <div className="fixed bottom-5 right-5 z-50">
       {selected && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
