@@ -1,3 +1,5 @@
+//app/dashboard/components/ProfileContent.tsx
+
 "use client";
 import React, { useState, useRef } from 'react';
 
