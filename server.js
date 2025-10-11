@@ -5,8 +5,6 @@ const fs = require("fs").promises;
 const path = require("path");
 
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
-const handle = app.getRequestHandler();
 
 // File path for persistent storage
 const DATA_FILE = path.join(__dirname, 'userProfile.json');
@@ -68,9 +66,12 @@ const saveUserProfile = async (profile) => {
   }
 };
 
-app.prepare().then(async () => {
+// Create and configure server
+async function createServer() {
+  const nextApp = next({ dev });
+  await nextApp.prepare();
+  
   const server = express();
-
   server.use(bodyParser.json({ limit: '10mb' }));
 
   // Initialize user profile
@@ -139,13 +140,22 @@ app.prepare().then(async () => {
 
   // Catch all other routes
   server.all("*", (req, res) => {
-    return handle(req, res);
+    return nextApp.getRequestHandler()(req, res);
   });
 
-  const PORT = process.env.PORT || 3000;
-  server.listen(PORT, (err) => {
-    if (err) throw err;
-    console.log(`🚀 Server ready at http://localhost:${PORT}`);
-    console.log(`💾 Profile data stored in: ${DATA_FILE}`);
+  return server;
+}
+
+// Only start server immediately if this file is run directly
+if (require.main === module) {
+  createServer().then(server => {
+    const PORT = process.env.PORT || 3000;
+    server.listen(PORT, (err) => {
+      if (err) throw err;
+      console.log(`🚀 Server ready at http://localhost:${PORT}`);
+      console.log(`💾 Profile data stored in: ${DATA_FILE}`);
+    });
   });
-});
+}
+
+module.exports = createServer;

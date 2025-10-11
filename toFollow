@@ -1,0 +1,197 @@
+Excellent debugging — you’ve moved past the import/export issue ✅
+Now the problem is that **your test tries to run the full Next.js + Express server**, which is overkill for Jest and leads to this error:
+
+```
+TypeError: createServer is not a function
+and
+⨯ Failed to load next.config.ts ...
+```
+
+That means:
+
+* Jest is trying to load your `server.js`
+* `server.js` runs `app.prepare()` from Next.js (which starts the full web server)
+* Jest’s environment shuts down before Next finishes preparing → crash
+
+---
+
+## ✅ The Correct Solution
+
+You need to **separate** your **Express API logic** from **Next.js setup**,
+so Jest can test just your backend endpoints without starting Next.js.
+
+Let’s fix this step-by-step 👇
+
+---
+
+## 🧱 Step 1: Create a Pure Express App File
+
+Create a new file called **`apiServer.js`** in your project root (next to `server.js`):
+
+```js
+// apiServer.js
+const express = require("express");
+const bodyParser = require("body-parser");
+const fs = require("fs").promises;
+const path = require("path");
+
+const DATA_FILE = path.join(__dirname, "userProfile.json");
+
+const defaultUserProfile = {
+  id: 1,
+  name: "Alex Johnson",
+  email: "alex.johnson@example.com",
+  bio: "Frontend developer passionate about React.",
+};
+
+async function loadUserProfile() {
+  try {
+    const data = await fs.readFile(DATA_FILE, "utf8");
+    return JSON.parse(data);
+  } catch {
+    await saveUserProfile(defaultUserProfile);
+    return defaultUserProfile;
+  }
+}
+
+async function saveUserProfile(profile) {
+  await fs.writeFile(DATA_FILE, JSON.stringify(profile, null, 2));
+  return true;
+}
+
+function createApiServer() {
+  const app = express();
+  app.use(bodyParser.json());
+
+  let userProfile = { ...defaultUserProfile };
+
+  app.get("/api/profile", async (req, res) => {
+    const profile = await loadUserProfile();
+    res.json(profile);
+  });
+
+  app.put("/api/profile", async (req, res) => {
+    userProfile = { ...userProfile, ...req.body };
+    await saveUserProfile(userProfile);
+    res.json({ success: true, userProfile });
+  });
+
+  return app;
+}
+
+module.exports = createApiServer;
+```
+
+This file is **only for your backend API** — no Next.js dependency, no `app.prepare()`.
+
+---
+
+## ⚙️ Step 2: Simplify Your `server.js`
+
+Change your existing `server.js` to use this API when running the real app:
+
+```js
+// server.js
+const express = require("express");
+const next = require("next");
+const createApiServer = require("./apiServer");
+
+const port = process.env.PORT || 3000;
+const dev = process.env.NODE_ENV !== "production";
+const app = next({ dev });
+const handle = app.getRequestHandler();
+
+app.prepare().then(() => {
+  const server = express();
+
+  // Mount your API routes
+  const api = createApiServer();
+  server.use(api);
+
+  // Let Next.js handle everything else
+  server.all("*", (req, res) => handle(req, res));
+
+  server.listen(port, () => {
+    console.log(`🚀 Server ready at http://localhost:${port}`);
+  });
+});
+```
+
+✅ Now `server.js` = real app
+✅ `apiServer.js` = isolated backend for Jest
+
+---
+
+## 🧪 Step 3: Update Your Test File
+
+`tests/profile.test.js`:
+
+```js
+const request = require("supertest");
+const createApiServer = require("../apiServer");
+
+let app;
+
+beforeAll(() => {
+  app = createApiServer();
+});
+
+describe("Profile API", () => {
+  it("should return profile data", async () => {
+    const res = await request(app).get("/api/profile");
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("name");
+  });
+
+  it("should update profile bio", async () => {
+    const res = await request(app)
+      .put("/api/profile")
+      .send({ bio: "Test bio" });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.userProfile.bio).toBe("Test bio");
+  });
+});
+```
+
+---
+
+## 🧩 Step 4: Keep `jest.config.js` as is
+
+```js
+module.exports = {
+  testEnvironment: "node",
+  testMatch: ["**/tests/**/*.test.js"],
+  verbose: true,
+};
+```
+
+---
+
+## ▶️ Step 5: Run Tests Again
+
+Now run:
+
+```bash
+npm test
+```
+
+✅ Expected output:
+
+```
+ PASS  tests/profile.test.js
+  Profile API
+    ✓ should return profile data (123 ms)
+    ✓ should update profile bio (65 ms)
+```
+
+---
+
+## 🧠 Why This Works
+
+* Jest runs only the Express backend (fast & isolated)
+* Next.js stays out of testing (no config loading or heavy prep)
+* You can still run `npm run dev` for the full app normally
+
+---
+
+Would you like me to show how to **mock Firebase Auth** next (so you can test login/register routes too)?
