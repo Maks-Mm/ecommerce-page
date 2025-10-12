@@ -4,14 +4,22 @@
 import { useProfile } from '@/hooks/useProfile';
 import { useState } from 'react';
 
+type ViewMode = 'basic' | 'detailed' | 'compact' | 'social';
+type Theme = 'light' | 'dark' | 'blue' | 'professional';
+
 export default function ProfileContent() {
   const { profile, loading, error, isUsingBackend, updateProfile } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('basic');
+  const [theme, setTheme] = useState<Theme>('light');
+  const [activeTab, setActiveTab] = useState<'profile' | 'activity' | 'settings' | 'media'>('profile');
   const [editData, setEditData] = useState({
     name: '',
     bio: '',
     location: '',
-    website: ''
+    website: '',
+    skills: [] as string[],
+    socialLinks: {} as Record<string, string>
   });
 
   // Start editing
@@ -21,7 +29,9 @@ export default function ProfileContent() {
       name: profile.name,
       bio: profile.bio,
       location: profile.location,
-      website: profile.website
+      website: profile.website,
+      skills: [...profile.skills],
+      socialLinks: { ...profile.socialLinks }
     });
   };
 
@@ -37,11 +47,58 @@ export default function ProfileContent() {
   };
 
   // Handle input changes
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | string[] | Record<string, string>) => {
     setEditData(prev => ({
       ...prev,
       [field]: value
     }));
+  };
+
+  // Add new skill
+  const handleAddSkill = () => {
+    const newSkill = prompt('Enter new skill:');
+    if (newSkill && !editData.skills.includes(newSkill)) {
+      handleInputChange('skills', [...editData.skills, newSkill]);
+    }
+  };
+
+  // Remove skill
+  const handleRemoveSkill = (skillToRemove: string) => {
+    handleInputChange('skills', editData.skills.filter(skill => skill !== skillToRemove));
+  };
+
+  // Add social link
+  const handleAddSocialLink = () => {
+    const platform = prompt('Enter platform (twitter, github, etc.):');
+    const username = prompt('Enter username:');
+    if (platform && username) {
+      handleInputChange('socialLinks', {
+        ...editData.socialLinks,
+        [platform]: username
+      });
+    }
+  };
+
+  // Remove social link
+  const handleRemoveSocialLink = (platform: string) => {
+    const newSocialLinks = { ...editData.socialLinks };
+    delete newSocialLinks[platform];
+    handleInputChange('socialLinks', newSocialLinks);
+  };
+
+  // Theme classes
+  const themeClasses = {
+    light: 'bg-gray-50 text-gray-900',
+    dark: 'bg-gray-900 text-white',
+    blue: 'bg-blue-50 text-blue-900',
+    professional: 'bg-gray-100 text-gray-800'
+  };
+
+  const cardThemeClasses = {
+    light: 'bg-white border-gray-200',
+    dark: 'bg-gray-800 border-gray-700',
+    blue: 'bg-blue-100 border-blue-200',
+    professional: 'bg-white border-gray-300'
   };
 
   if (loading) {
@@ -53,8 +110,52 @@ export default function ProfileContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      {/* Connection Status - SIMPLIFIED */}
+    <div className={`min-h-screen p-4 ${themeClasses[theme]}`}>
+      
+      {/* Header with Controls */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Profile</h1>
+          <p className="text-gray-600">Manage your profile settings</p>
+        </div>
+        
+        {/* Controls */}
+        <div className="flex flex-wrap gap-3">
+          {/* View Mode Selector */}
+          <select 
+            value={viewMode}
+            onChange={(e) => setViewMode(e.target.value as ViewMode)}
+            className="px-3 py-2 border rounded bg-white"
+          >
+            <option value="basic">Basic View</option>
+            <option value="detailed">Detailed View</option>
+            <option value="compact">Compact View</option>
+            <option value="social">Social View</option>
+          </select>
+
+          {/* Theme Selector */}
+          <select 
+            value={theme}
+            onChange={(e) => setTheme(e.target.value as Theme)}
+            className="px-3 py-2 border rounded bg-white"
+          >
+            <option value="light">Light Theme</option>
+            <option value="dark">Dark Theme</option>
+            <option value="blue">Blue Theme</option>
+            <option value="professional">Professional</option>
+          </select>
+
+          {/* Edit Button */}
+          <button
+            onClick={handleEditStart}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Edit Profile
+          </button>
+        </div>
+      </div>
+
+      {/* Connection Status */}
       <div className={`mb-4 p-3 rounded ${
         isUsingBackend 
           ? 'bg-green-100 text-green-800' 
@@ -71,67 +172,145 @@ export default function ProfileContent() {
         </div>
       )}
 
-      {/* SIMPLIFIED PROFILE CARD */}
-      <div className="bg-white rounded-lg shadow p-6">
-        
-        {/* Header with Edit Button */}
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {profile.name}
-            </h1>
-            {profile.isVerified && (
-              <span className="text-blue-500 text-sm">✓ Verified</span>
-            )}
-          </div>
+      {/* Navigation Tabs */}
+      <div className="flex border-b mb-6">
+        {(['profile', 'activity', 'settings', 'media'] as const).map(tab => (
           <button
-            onClick={handleEditStart}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 font-medium capitalize ${
+              activeTab === tab 
+                ? 'border-b-2 border-blue-500 text-blue-600' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
           >
-            Edit Profile
+            {tab}
           </button>
-        </div>
+        ))}
+      </div>
 
+      {/* Main Content */}
+      <div className={`rounded-lg shadow p-6 ${cardThemeClasses[theme]}`}>
+        
         {/* Edit Form */}
         {isEditing && (
-          <div className="mb-6 p-4 bg-blue-50 rounded">
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <h3 className="text-lg font-semibold mb-3">Edit Profile</h3>
-            <div className="space-y-3">
-              <input
-                type="text"
-                value={editData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Name"
-                className="w-full p-2 border rounded"
-              />
-              <input
-                type="text"
-                value={editData.location}
-                onChange={(e) => handleInputChange('location', e.target.value)}
-                placeholder="Location"
-                className="w-full p-2 border rounded"
-              />
-              <input
-                type="text"
-                value={editData.website}
-                onChange={(e) => handleInputChange('website', e.target.value)}
-                placeholder="Website"
-                className="w-full p-2 border rounded"
-              />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <input
+                  type="text"
+                  value={editData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Location</label>
+                <input
+                  type="text"
+                  value={editData.location}
+                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Website</label>
+                <input
+                  type="text"
+                  value={editData.website}
+                  onChange={(e) => handleInputChange('website', e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">Bio</label>
               <textarea
                 value={editData.bio}
                 onChange={(e) => handleInputChange('bio', e.target.value)}
-                placeholder="Bio"
                 rows={3}
                 className="w-full p-2 border rounded"
               />
             </div>
-            <div className="flex gap-2 mt-3">
+
+            {/* Skills Editor */}
+            <div className="mb-4">
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium">Skills</label>
+                <button
+                  type="button"
+                  onClick={handleAddSkill}
+                  className="text-sm bg-green-500 text-white px-2 py-1 rounded"
+                >
+                  + Add Skill
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {editData.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                  >
+                    {skill}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSkill(skill)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Social Links Editor */}
+            <div className="mb-4">
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium">Social Links</label>
+                <button
+                  type="button"
+                  onClick={handleAddSocialLink}
+                  className="text-sm bg-green-500 text-white px-2 py-1 rounded"
+                >
+                  + Add Social
+                </button>
+              </div>
+              <div className="space-y-2">
+                {Object.entries(editData.socialLinks).map(([platform, username]) => (
+                  <div key={platform} className="flex items-center gap-2">
+                    <span className="capitalize font-medium w-20">{platform}:</span>
+                    <input
+                      type="text"
+                      value={username}
+                      onChange={(e) => handleInputChange('socialLinks', {
+                        ...editData.socialLinks,
+                        [platform]: e.target.value
+                      })}
+                      className="flex-1 p-1 border rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSocialLink(platform)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-2">
               <button
                 onClick={handleSave}
                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
               >
-                Save
+                Save Changes
               </button>
               <button
                 onClick={handleEditCancel}
@@ -143,97 +322,168 @@ export default function ProfileContent() {
           </div>
         )}
 
-        {/* Profile Information - SIMPLE GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          
-          {/* Left Column - Basic Info */}
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Basic Information</h3>
-              <div className="space-y-2">
-                <p><strong>Email:</strong> {profile.email}</p>
-                <p><strong>Bio:</strong> {profile.bio}</p>
-                <p><strong>Location:</strong> {profile.location}</p>
-                <p><strong>Website:</strong> {profile.website}</p>
-                <p><strong>Joined:</strong> {profile.joinDate}</p>
+        {/* Profile Content based on active tab */}
+        {activeTab === 'profile' && (
+          <div className="space-y-6">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row gap-6 items-start">
+              <div className="flex-shrink-0">
+                <img
+                  src={profile.avatar}
+                  alt="Profile"
+                  className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-gray-200"
+                />
               </div>
-            </div>
-
-            {/* Stats */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Statistics</h3>
-              <div className="flex gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">{profile.posts}</div>
-                  <div className="text-sm text-gray-600">Posts</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">{profile.followers}</div>
-                  <div className="text-sm text-gray-600">Followers</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">{profile.following}</div>
-                  <div className="text-sm text-gray-600">Following</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Skills & Social */}
-          <div className="space-y-4">
-            {/* Skills */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Skills</h3>
-              <div className="flex flex-wrap gap-2">
-                {profile.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Social Links */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Social Links</h3>
-              <div className="space-y-2">
-                {Object.entries(profile.socialLinks).map(([platform, username]) => (
-                  <div key={platform} className="flex items-center">
-                    <span className="capitalize font-medium w-20">{platform}:</span>
-                    <span className="text-blue-600">@{username}</span>
+              <div className="flex-1">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                  <div>
+                    <h1 className="text-3xl font-bold mb-2">{profile.name}</h1>
+                    {profile.isVerified && (
+                      <span className="text-blue-500 text-sm">✓ Verified Profile</span>
+                    )}
                   </div>
-                ))}
+                </div>
+                <p className="text-gray-600 mb-4">{profile.bio}</p>
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <span>📍 {profile.location}</span>
+                  <span>🌐 {profile.website}</span>
+                  <span>📅 Joined {profile.joinDate}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats Section */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">{profile.posts}</div>
+                <div className="text-sm text-gray-600">Posts</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">{profile.followers}</div>
+                <div className="text-sm text-gray-600">Followers</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">{profile.following}</div>
+                <div className="text-sm text-gray-600">Following</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600">{profile.skills.length}</div>
+                <div className="text-sm text-gray-600">Skills</div>
+              </div>
+            </div>
+
+            {/* Skills & Social Links */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-xl font-semibold mb-3">Skills & Expertise</h3>
+                <div className="flex flex-wrap gap-2">
+                  {profile.skills.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-3">Connect With Me</h3>
+                <div className="space-y-2">
+                  {Object.entries(profile.socialLinks).map(([platform, username]) => (
+                    <div key={platform} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded">
+                      <span className="capitalize font-medium w-20">{platform}</span>
+                      <span className="text-blue-600 font-medium">@{username}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Images Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Profile Picture</h3>
-            <img
-              src={profile.avatar}
-              alt="Profile"
-              className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
-            />
+        {/* Activity Tab */}
+        {activeTab === 'activity' && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Recent Activity</h3>
+            <div className="space-y-3">
+              {[1, 2, 3].map(item => (
+                <div key={item} className="p-4 border rounded-lg hover:bg-gray-50">
+                  <p className="text-gray-600">Activity item {item}</p>
+                  <span className="text-sm text-gray-500">2 hours ago</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Cover Image</h3>
-            <img
-              src={profile.coverImage}
-              alt="Cover"
-              className="w-full h-32 object-cover rounded border"
-            />
-          </div>
-        </div>
+        )}
 
-        {/* Test Buttons */}
-        <div className="border-t pt-4">
-          <h3 className="text-lg font-semibold mb-3">Test Functions</h3>
+        {/* Settings Tab */}
+        {activeTab === 'settings' && (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold">Profile Settings</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h4 className="font-semibold">Display Options</h4>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" defaultChecked />
+                    <span>Show email to public</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" defaultChecked />
+                    <span>Show activity status</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" />
+                    <span>Enable two-factor authentication</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="font-semibold">Privacy Settings</h4>
+                <div className="space-y-2">
+                  <select className="w-full p-2 border rounded">
+                    <option>Public - Anyone can see your profile</option>
+                    <option>Private - Only followers can see</option>
+                    <option>Custom - Custom privacy settings</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Media Tab */}
+        {activeTab === 'media' && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Profile Media</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold mb-2">Profile Picture</h4>
+                <img
+                  src={profile.avatar}
+                  alt="Profile"
+                  className="w-48 h-48 rounded-full object-cover border-4 border-gray-200 mx-auto"
+                />
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Cover Image</h4>
+                <img
+                  src={profile.coverImage}
+                  alt="Cover"
+                  className="w-full h-48 object-cover rounded-lg border"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Test Functions */}
+        <div className="border-t pt-6 mt-6">
+          <h3 className="text-lg font-semibold mb-3">Quick Actions</h3>
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => updateProfile({ 
@@ -258,6 +508,17 @@ export default function ProfileContent() {
               className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
             >
               Add Skill
+            </button>
+            <button
+              onClick={() => updateProfile({
+                socialLinks: {
+                  ...profile.socialLinks,
+                  [`platform-${Date.now()}`]: 'username'
+                }
+              })}
+              className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+            >
+              Add Social
             </button>
           </div>
         </div>
