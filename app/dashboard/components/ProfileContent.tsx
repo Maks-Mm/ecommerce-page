@@ -7,6 +7,14 @@ import { useState } from 'react';
 type ViewMode = 'basic' | 'detailed' | 'compact' | 'social';
 type Theme = 'light' | 'dark' | 'blue' | 'professional';
 
+// Define the social links structure that matches your backend
+const defaultSocialLinks = {
+  twitter: '',
+  github: '', 
+  linkedin: '',
+  instagram: ''
+};
+
 export default function ProfileContent() {
   const { profile, loading, error, isUsingBackend, updateProfile } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +27,7 @@ export default function ProfileContent() {
     location: '',
     website: '',
     skills: [] as string[],
-    socialLinks: {} as Record<string, string>
+    socialLinks: { ...defaultSocialLinks }
   });
 
   // Start editing
@@ -42,15 +50,30 @@ export default function ProfileContent() {
 
   // Save changes
   const handleSave = async () => {
-    await updateProfile(editData);
-    setIsEditing(false);
+    try {
+      await updateProfile(editData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+    }
   };
 
-  // Handle input changes
-  const handleInputChange = (field: string, value: string | string[] | Record<string, string>) => {
+  // Handle input changes for simple fields
+  const handleInputChange = (field: string, value: string | string[]) => {
     setEditData(prev => ({
       ...prev,
       [field]: value
+    }));
+  };
+
+  // Handle social link changes - FIXED VERSION
+  const handleSocialLinkChange = (platform: keyof typeof defaultSocialLinks, value: string) => {
+    setEditData(prev => ({
+      ...prev,
+      socialLinks: {
+        ...prev.socialLinks, // This is now guaranteed to exist
+        [platform]: value
+      }
     }));
   };
 
@@ -58,32 +81,19 @@ export default function ProfileContent() {
   const handleAddSkill = () => {
     const newSkill = prompt('Enter new skill:');
     if (newSkill && !editData.skills.includes(newSkill)) {
-      handleInputChange('skills', [...editData.skills, newSkill]);
+      setEditData(prev => ({
+        ...prev,
+        skills: [...prev.skills, newSkill]
+      }));
     }
   };
 
   // Remove skill
   const handleRemoveSkill = (skillToRemove: string) => {
-    handleInputChange('skills', editData.skills.filter(skill => skill !== skillToRemove));
-  };
-
-  // Add social link
-  const handleAddSocialLink = () => {
-    const platform = prompt('Enter platform (twitter, github, etc.):');
-    const username = prompt('Enter username:');
-    if (platform && username) {
-      handleInputChange('socialLinks', {
-        ...editData.socialLinks,
-        [platform]: username
-      });
-    }
-  };
-
-  // Remove social link
-  const handleRemoveSocialLink = (platform: string) => {
-    const newSocialLinks = { ...editData.socialLinks };
-    delete newSocialLinks[platform];
-    handleInputChange('socialLinks', newSocialLinks);
+    setEditData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(skill => skill !== skillToRemove)
+    }));
   };
 
   // Theme classes
@@ -162,7 +172,7 @@ export default function ProfileContent() {
           : 'bg-yellow-100 text-yellow-800'
       }`}>
         <span className="font-medium">
-          {isUsingBackend ? '✅ Backend Connected' : '⚠️ Using Demo Data'}
+          {isUsingBackend ? '✅ Backend Connected - Data is persistent' : '⚠️ Using Demo Data - Changes will reset'}
         </span>
       </div>
 
@@ -268,38 +278,23 @@ export default function ProfileContent() {
               </div>
             </div>
 
-            {/* Social Links Editor */}
+            {/* Social Links Editor - FIXED */}
             <div className="mb-4">
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-medium">Social Links</label>
-                <button
-                  type="button"
-                  onClick={handleAddSocialLink}
-                  className="text-sm bg-green-500 text-white px-2 py-1 rounded"
-                >
-                  + Add Social
-                </button>
-              </div>
-              <div className="space-y-2">
-                {Object.entries(editData.socialLinks).map(([platform, username]) => (
+              <h4 className="block text-sm font-medium mb-2">Social Links</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {Object.entries(defaultSocialLinks).map(([platform]) => (
                   <div key={platform} className="flex items-center gap-2">
                     <span className="capitalize font-medium w-20">{platform}:</span>
                     <input
                       type="text"
-                      value={username}
-                      onChange={(e) => handleInputChange('socialLinks', {
-                        ...editData.socialLinks,
-                        [platform]: e.target.value
-                      })}
-                      className="flex-1 p-1 border rounded"
+                      value={editData.socialLinks[platform as keyof typeof defaultSocialLinks]}
+                      onChange={(e) => handleSocialLinkChange(
+                        platform as keyof typeof defaultSocialLinks, 
+                        e.target.value
+                      )}
+                      placeholder={`Your ${platform} username`}
+                      className="flex-1 p-2 border rounded"
                     />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveSocialLink(platform)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      Remove
-                    </button>
                   </div>
                 ))}
               </div>
@@ -310,7 +305,7 @@ export default function ProfileContent() {
                 onClick={handleSave}
                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
               >
-                Save Changes
+                {isUsingBackend ? 'Save to Backend' : 'Save Changes'}
               </button>
               <button
                 onClick={handleEditCancel}
@@ -322,7 +317,7 @@ export default function ProfileContent() {
           </div>
         )}
 
-        {/* Profile Content based on active tab */}
+        {/* Profile Content */}
         {activeTab === 'profile' && (
           <div className="space-y-6">
             {/* Header Section */}
@@ -435,10 +430,6 @@ export default function ProfileContent() {
                     <input type="checkbox" defaultChecked />
                     <span>Show activity status</span>
                   </label>
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" />
-                    <span>Enable two-factor authentication</span>
-                  </label>
                 </div>
               </div>
 
@@ -448,7 +439,6 @@ export default function ProfileContent() {
                   <select className="w-full p-2 border rounded">
                     <option>Public - Anyone can see your profile</option>
                     <option>Private - Only followers can see</option>
-                    <option>Custom - Custom privacy settings</option>
                   </select>
                 </div>
               </div>
@@ -481,7 +471,7 @@ export default function ProfileContent() {
           </div>
         )}
 
-        {/* Test Functions */}
+        {/* Quick Actions */}
         <div className="border-t pt-6 mt-6">
           <h3 className="text-lg font-semibold mb-3">Quick Actions</h3>
           <div className="flex gap-2 flex-wrap">
@@ -508,17 +498,6 @@ export default function ProfileContent() {
               className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
             >
               Add Skill
-            </button>
-            <button
-              onClick={() => updateProfile({
-                socialLinks: {
-                  ...profile.socialLinks,
-                  [`platform-${Date.now()}`]: 'username'
-                }
-              })}
-              className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
-            >
-              Add Social
             </button>
           </div>
         </div>

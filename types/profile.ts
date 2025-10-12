@@ -23,6 +23,8 @@ export interface UserProfile {
   };
 }
 
+export type ProfileUpdateData = Partial<Omit<UserProfile, 'id' | 'email' | 'joinDate'>>;
+
 export const fallbackProfile: UserProfile = {
   id: 1,
   name: "Alex Johnson",
